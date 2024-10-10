@@ -44,8 +44,8 @@ SubShader {
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				// ADDED BY BERNIE:
-				//v.texcoord.x = 1 - v.texcoord.x;
-				o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+				v.texcoord.x = 1 - v.texcoord.x;
+				o.texcoord =v.texcoord.xy;// TRANSFORM_TEX(v.texcoord, _MainTex);
 				return o;
 			}
 			

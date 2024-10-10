@@ -32,9 +32,9 @@ Material:
     - _AspectRatio: 1.484737
     - _Offsetx: 0.05
     - _Offsety: 0.05
-    - _SpherePercentajex: 0.73
-    - _SpherePercentajey: 0.7
-    - _offsetx: -0.2
-    - _offsety: 0.03
+    - _SpherePercentajex: 0.251
+    - _SpherePercentajey: 0.25
+    - _offsetx: 0
+    - _offsety: 0
     m_Colors: []
   m_BuildTextureStacks: []
