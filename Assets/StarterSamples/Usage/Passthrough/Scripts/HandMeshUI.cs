@@ -26,6 +26,7 @@ public class HandMeshUI : MonoBehaviour
 {
     public SphereCollider[] knobs;
     public TextMesh[] readouts;
+    public Transform SphereTransform;
 
     int rightHeldKnob = -1;
     int leftHeldKnob = -1;
@@ -41,9 +42,12 @@ public class HandMeshUI : MonoBehaviour
     {
         //SetSliderValue(0, rightMask.radialDivisions, false);
         SetSliderValue(0, 0.0f, false);
-        SetSliderValue(1, rightMask.borderSize, false);
-        SetSliderValue(2, rightMask.fingerTaper, false);
-        SetSliderValue(3, rightMask.fingerTipLength, false);
+        SetSliderValue(1, 0.0f, false);
+        SetSliderValue(2, 0.0f, false);
+        SetSliderValue(3, 0.0f, false);
+        //SetSliderValue(1, rightMask.borderSize, false);
+        //SetSliderValue(2, rightMask.fingerTaper, false);
+        //SetSliderValue(3, rightMask.fingerTipLength, false);
         SetSliderValue(4, rightMask.webOffset, false);
     }
 
@@ -114,18 +118,18 @@ public class HandMeshUI : MonoBehaviour
                 displayString = "{0, 0:0.00}";
                 break;
             case 1:
-                sliderStart = 0;
-                sliderEnd = 0.05f;
-                displayString = "{0, 0:0.000}";
+                sliderStart = 0.0f;
+                sliderEnd = 1.0f;
+                displayString = "{0, 0:0.00}";
                 break;
             case 2:
-                sliderStart = 0;
-                sliderEnd = 0.3333f;
+                sliderStart = 0.0f;
+                sliderEnd = 1.0f;
                 displayString = "{0, 0:0.00}";
                 break;
             case 3:
-                sliderStart = 0.5f;
-                sliderEnd = 1.5f;
+                sliderStart = -0.5f;
+                sliderEnd = 0.5f;
                 displayString = "{0, 0:0.00}";
                 break;
             case 4:
@@ -150,16 +154,17 @@ public class HandMeshUI : MonoBehaviour
                 SphereMaterial.SetFloat("_SpherePercentajey", absoluteValue);
                 break;
             case 1:
-                rightMask.borderSize = absoluteValue;
-                leftMask.borderSize = absoluteValue;
+                //SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, SphereTransform.position.y, absoluteValue*4), Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, SphereTransform.rotation.eulerAngles.y, SphereTransform.rotation.eulerAngles.z));
+                SphereTransform.localScale = new Vector3(SphereTransform.localScale.x,3.6f * absoluteValue, 3.6f * absoluteValue);
+                //SphereMaterial.SetFloat("_SpherePercentajey", absoluteValue);
                 break;
             case 2:
-                rightMask.fingerTaper = absoluteValue;
-                leftMask.fingerTaper = absoluteValue;
+                SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, SphereTransform.position.y, SphereTransform.position.z), Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, 360*absoluteValue, SphereTransform.rotation.eulerAngles.z));
+
                 break;
             case 3:
-                rightMask.fingerTipLength = absoluteValue;
-                leftMask.fingerTipLength = absoluteValue;
+                SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, SphereTransform.position.y, SphereTransform.position.z), Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, SphereTransform.rotation.eulerAngles.y, 90 * (absoluteValue)));
+
                 break;
             case 4:
                 rightMask.webOffset = absoluteValue;

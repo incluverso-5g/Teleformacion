@@ -278,13 +278,13 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163489706}
-  m_Text: 'Radial Divisions
+  m_Text: 'Sphere Percentaje
 
-    Border Size
+    Far/Near
 
-    Finger Taper
+    Left/Right
 
-    Finger Tip Length
+    Up/Down
 
     Web
     Offset'
@@ -1904,7 +1904,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155949990}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.6, y: 3.6, z: 3.6}
   m_ConstrainProportionsScale: 0
@@ -1941,7 +1941,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
   m_WaitForFirstFrame: 1
@@ -1954,11 +1954,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155949990}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4516f10839115b64d9487a13f85d4a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  videofile: videoexample.mp4
 --- !u!1 &1162522712
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,6 +2116,7 @@ MonoBehaviour:
   - {fileID: 1944389078}
   - {fileID: 1502074236}
   - {fileID: 281573948}
+  SphereTransform: {fileID: 1155949994}
   leftHand: {fileID: 770741152}
   rightHand: {fileID: 1258233564}
   leftMask: {fileID: 406421950}
@@ -2129,7 +2131,7 @@ Transform:
   m_GameObject: {fileID: 1279145089}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

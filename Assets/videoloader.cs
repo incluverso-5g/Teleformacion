@@ -9,9 +9,11 @@ public class videoloader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        VideoPlayer player = GetComponent<VideoPlayer>();
-        player.url= Application.streamingAssetsPath+ videofile;
-        player.Play();
+        VideoPlayer videoPlayer = GetComponent<VideoPlayer>();
+        string VideoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videofile);
+        Debug.Log(VideoPath);
+        videoPlayer.url = VideoPath;
+        videoPlayer.Play();
     }
 
     // Update is called once per frame
