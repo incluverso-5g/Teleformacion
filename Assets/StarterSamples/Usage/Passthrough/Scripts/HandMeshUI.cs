@@ -60,9 +60,11 @@ public class HandMeshUI : MonoBehaviour
             {
                 Vector3 localCursorPos = knobs[rightHeldKnob].transform.parent.InverseTransformPoint(RfingerPos);
                 SetSliderValue(rightHeldKnob, Mathf.Clamp01(localCursorPos.x * 10), true);
-                if (localCursorPos.z < -0.02f)
+                
+                if (localCursorPos.z < -0.02f || localCursorPos.y < -0.02f || localCursorPos.x < -0.02f)
                 {
                     rightHeldKnob = -1;
+                    
                 }
             }
             else
@@ -71,8 +73,14 @@ public class HandMeshUI : MonoBehaviour
                 {
                     if (Vector3.Distance(RfingerPos, knobs[i].transform.position) <= 0.02f && leftHeldKnob != i)
                     {
+                        
                         rightHeldKnob = i;
+                        SetSliderColor(i, Color.red);
                         break;
+                    }
+                    else
+                    {
+                        SetSliderColor(i, Color.black);
                     }
                 }
             }
@@ -103,7 +111,11 @@ public class HandMeshUI : MonoBehaviour
             }
         }
     }
-
+    void SetSliderColor(int sliderID,Color color)
+    {
+        if(knobs[sliderID].transform.GetComponent<MeshRenderer>() != null)
+            knobs[sliderID].transform.GetComponent<MeshRenderer>().material.color = color;
+    }
     void SetSliderValue(int sliderID, float value, bool isNormalized)
     {
         float sliderStart = 0.0f;
@@ -150,12 +162,12 @@ public class HandMeshUI : MonoBehaviour
             case 0:
                 //rightMask.radialDivisions = (int)absoluteValue;
                 //leftMask.radialDivisions = (int)absoluteValue;
-                SphereMaterial.SetFloat("_SpherePercentajex", absoluteValue);
-                SphereMaterial.SetFloat("_SpherePercentajey", absoluteValue);
+                SphereMaterial.SetFloat("_SpherePercentajex", Mathf.Min(absoluteValue,0.7f));
+                SphereMaterial.SetFloat("_SpherePercentajey", Mathf.Min(absoluteValue,0.65f));
                 break;
             case 1:
-                //SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, SphereTransform.position.y, absoluteValue*4), Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, SphereTransform.rotation.eulerAngles.y, SphereTransform.rotation.eulerAngles.z));
-                SphereTransform.localScale = new Vector3(SphereTransform.localScale.x,3.6f * absoluteValue, 3.6f * absoluteValue);
+                SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, SphereTransform.position.y, absoluteValue*4), Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, SphereTransform.rotation.eulerAngles.y, SphereTransform.rotation.eulerAngles.z));
+                //SphereTransform.localScale = new Vector3(SphereTransform.localScale.x,3.6f * absoluteValue, 3.6f * absoluteValue);
                 //SphereMaterial.SetFloat("_SpherePercentajey", absoluteValue);
                 break;
             case 2:
@@ -163,12 +175,20 @@ public class HandMeshUI : MonoBehaviour
 
                 break;
             case 3:
-                SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, SphereTransform.position.y, SphereTransform.position.z), Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, SphereTransform.rotation.eulerAngles.y, 90 * (absoluteValue)));
+                SphereTransform.SetPositionAndRotation(new Vector3(SphereTransform.position.x, absoluteValue*3, SphereTransform.position.z),Quaternion.Euler(SphereTransform.rotation.eulerAngles.x, SphereTransform.rotation.eulerAngles.y, SphereTransform.rotation.eulerAngles.z));
 
                 break;
             case 4:
-                rightMask.webOffset = absoluteValue;
-                leftMask.webOffset = absoluteValue;
+                if (absoluteValue > 0.9f)
+                {
+                    SphereTransform.SetPositionAndRotation(Camera.main.transform.position, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+                    knobs[1].transform.localPosition = Vector3.right * 0 * sliderScale;
+                    knobs[3].transform.localPosition = Vector3.right * 0 * sliderScale;
+                    knobs[4].transform.localPosition = Vector3.right * 0 * sliderScale;
+                    readouts[1].text = string.Format(displayString, 0.0f);
+                    readouts[3].text = string.Format(displayString, 0.0f);
+                    readouts[4].text = string.Format(displayString, 0.0f);
+                }
                 break;
         }
     }

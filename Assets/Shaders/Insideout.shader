@@ -45,13 +45,17 @@ SubShader {
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				// ADDED BY BERNIE:
 				v.texcoord.x = 1 - v.texcoord.x;
-				o.texcoord =v.texcoord.xy;// TRANSFORM_TEX(v.texcoord, _MainTex);
+				//o.texcoord =v.texcoord.xy;// TRANSFORM_TEX(v.texcoord, _MainTex);
+				o.texcoord.x =v.texcoord.x - _offsetx;
+				o.texcoord.y =v.texcoord.y - _offsety;
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
 				if(  (i.texcoord.x + _offsetx) < (_SpherePercentajex/2 ) || (i.texcoord.x + _offsetx) > (1.0 - _SpherePercentajex/2) ||  (i.texcoord.y + _offsety) < (_SpherePercentajey/2) ||  (i.texcoord.y + _offsety) > (1.0 - _SpherePercentajey/2))
+					//return fixed4(0.5,0.5,0.5,1);	
+					//return fixed4((1-i.texcoord.x),(1-i.texcoord.y),i.texcoord.y,1);
 					discard;
 				fixed4 col = tex2D(_MainTex, i.texcoord);
 				return col;
