@@ -48,7 +48,7 @@ public class HandMeshUI : MonoBehaviour
         //SetSliderValue(1, rightMask.borderSize, false);
         //SetSliderValue(2, rightMask.fingerTaper, false);
         //SetSliderValue(3, rightMask.fingerTipLength, false);
-        SetSliderValue(4, rightMask.webOffset, false);
+        SetSliderValue(4, 0.0f, false);
     }
 
     void Update()

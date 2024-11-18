@@ -30,9 +30,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _AspectRatio: 1.484737
-    - _SpherePercentajex: 0.4
-    - _SpherePercentajey: 0.63
-    - _offsetx: 0.11
+    - _SpherePercentajex: -0.19
+    - _SpherePercentajey: 0.72
+    - _offsetx: 0
     - _offsety: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

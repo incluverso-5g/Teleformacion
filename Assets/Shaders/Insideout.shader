@@ -7,8 +7,8 @@ Properties {
 	_MainTex ("Base (RGB)", 2D) = "white" {}
 	_SpherePercentajex ("Sphere Percentaje X", Float) = 0.75
 	_SpherePercentajey ("Sphere Percentaje Y", Float) = 0.75
-	_offsetx ("offset  X", Float) = 0.75
-	_offsety ("offset  Y", Float) = 0.75
+	_offsetx ("offset  X", Float) = 0.0
+	_offsety ("offset  Y", Float) = 0.0
 	_AspectRatio ("AspectRatio", Float) = 1.484737
 }
 
@@ -54,8 +54,6 @@ SubShader {
 			fixed4 frag (v2f i) : SV_Target
 			{
 				if(  (i.texcoord.x + _offsetx) < (_SpherePercentajex/2 ) || (i.texcoord.x + _offsetx) > (1.0 - _SpherePercentajex/2) ||  (i.texcoord.y + _offsety) < (_SpherePercentajey/2) ||  (i.texcoord.y + _offsety) > (1.0 - _SpherePercentajey/2))
-					//return fixed4(0.5,0.5,0.5,1);	
-					//return fixed4((1-i.texcoord.x),(1-i.texcoord.y),i.texcoord.y,1);
 					discard;
 				fixed4 col = tex2D(_MainTex, i.texcoord);
 				return col;

@@ -5,20 +5,22 @@ using UnityEngine.Video;
 
 public class videoloader : MonoBehaviour
 {
+    VideoPlayer videoPlayer;
     public string videofile;
     // Start is called before the first frame update
     void Start()
     {
-        VideoPlayer videoPlayer = GetComponent<VideoPlayer>();
+        videoPlayer = GetComponent<VideoPlayer>();
         string VideoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videofile);
         Debug.Log(VideoPath);
         videoPlayer.url = VideoPath;
-        videoPlayer.Play();
+        videoPlayer.Prepare();
+        //videoPlayer.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //if(videoPlayer.isPrepared) videoPlayer.Play();
     }
 }
