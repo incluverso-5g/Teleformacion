@@ -2574,6 +2574,7 @@ GameObject:
   - component: {fileID: 1155949992}
   - component: {fileID: 1155949991}
   - component: {fileID: 1155949995}
+  - component: {fileID: 1155949997}
   - component: {fileID: 1155949996}
   m_Layer: 0
   m_Name: Sphere
@@ -2694,7 +2695,7 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: /storage/emulated/0/Movies/examplevideo.mp4
+  m_Url: http://127.0.0.1:3000/static/OUTPUT/CONCIERTO_RIEDING_AMATISTA/playlist.m3u8
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
@@ -2713,10 +2714,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1155949990}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e723541c065c65546afff60ba0af36df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ini_file: player.ini
+  player: {fileID: 1155949997}
+--- !u!114 &1155949997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155949990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4516f10839115b64d9487a13f85d4a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   videofile: jola.mp4
+  statusReportPeriod: 2
+  automaticStart: 1
 --- !u!1 &1162522712
 GameObject:
   m_ObjectHideFlags: 0
