@@ -3788,6 +3788,8 @@ MonoBehaviour:
   videofile: videoexample.mp4
   handmeshui: {fileID: 1279145090}
   statusReportPeriod: 2
+  InteractableObject: {fileID: 16024882}
+  HandMeshObject: {fileID: 1279145089}
   automaticStart: 1
 --- !u!1 &1162522712
 GameObject:

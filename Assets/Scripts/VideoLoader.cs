@@ -10,7 +10,7 @@ public class VideoLoader : MonoBehaviour
     public string videofile;
     public HandMeshUI handmeshui;
     public int statusReportPeriod = 2;
-
+    public GameObject InteractableObject, HandMeshObject;
     public bool automaticStart = true;
 
     private ISbspController sbspController = null;
@@ -141,6 +141,20 @@ public class VideoLoader : MonoBehaviour
     {
         handmeshui.SetSliderValue(4, 1.0f, false);
 
+    }
+    public void toogleButtons()
+    {
+        InteractableObject.SetActive(!InteractableObject.activeSelf);
+    }
+    public void toogleUI()
+    {
+        bool enabled = HandMeshObject.GetComponentInChildren<MeshRenderer>().enabled;
+        
+            foreach (var meshRenderer in HandMeshObject.GetComponentsInChildren<MeshRenderer>())
+            {
+            meshRenderer.enabled = !enabled;
+            }
+        
     }
 
     public void plusTenSeconds() 

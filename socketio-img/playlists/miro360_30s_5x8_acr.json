@@ -1,0 +1,431 @@
+{
+  "scales" : [{
+    "name": "exp",
+    "scores": ["newbie", "initiate", "proficient", "master", "legend"]
+  }],
+  "questionnaires": [{
+    "name": "rpq",
+    "items": [
+      {
+        "scale": "exp",
+        "text": "Rate your expertise level with VR technologies",
+        "tag": "RPQ.MS"
+      },
+      {
+        "scale": "acr",
+        "text": "How reliable do you think your scores are?",
+        "tag": "RPQ.SQ"
+      },
+      {
+        "scale": "likert",
+        "text": "'I have enjoyed using this tool'",
+        "tag": "RPQ.AQ"
+      }
+    ]
+  }],
+  "sequences": [
+
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP22_6x3_abrupt.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP22_6x3_gradual.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP22_8x5_abrupt.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP22_8x5_gradual.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP_15.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP_22.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP_32.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEluther_4096x2048_30/VSENSEluther_4096x2048_30_QP_42.mp4",
+      "src_id": "luther",
+      "start": 0,
+      "duration": 29,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+    {
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP22_8x5_abrupt.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP22_8x5_gradual.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP22_6x3_abrupt.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP22_6x3_gradual.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP_15.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP_22.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP_32.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/NokiaFLAMENCO_3840x2160_30/NokiaFLAMENCO_3840x2160_30_QP_42.mp4",
+      "src_id": "FLAMENCO",
+      "duration": 30,
+	"start": 0,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+    {
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP22_8x5_gradual.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP22_8x5_abrupt.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP22_6x3_gradual.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP22_6x3_abrupt.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP_15.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP_22.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP_32.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/VSENSEVaude_4096x2048_30/VSENSEVaude_4096x2048_30_QP_42.mp4",
+      "src_id": "Vaude",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP22_8x5_abrupt.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP22_8x5_gradual.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP22_6x3_abrupt.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP22_6x3_gradual.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP_15.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP_22.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP_32.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/BrazilMusic_4096x2048_25/BrazilMusic_4096x2048_25_QP_42.mp4",
+      "src_id": "Brazil",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP22_6x3_gradual.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP22_6x3_abrupt.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP22_8x5_gradual.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP22_8x5_abrupt.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP_15.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP_22.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP_32.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    },
+{
+      "uri": "D:/VQEG/Oculusmotion_3840x1920_30/Oculusmotion_3840x1920_30_QP_42.mp4",
+      "src_id": "Oculusmotion",
+      "start": 0,
+      "duration": 30,
+      "post_sequence_timeout" : 5, 
+"post_seq_questions": [
+        "acr"
+      ]
+    }
+   ],
+
+   "randomize": true
+}

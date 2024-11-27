@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+  <title>IMG Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font: 20px 'Nokia Pure Text', Helvetica, Arial; }
+    button {  font: 20px 'Nokia Pure Text', Helvetica, Arial; 
+    color: white; background: #183693; border: none; padding: 10px; }
+    #messages { list-style-type: none; margin: 0; padding: 0; font: 12px 'Nokia Pure Text', Helvetica, Arial;}
+    #messages li { padding: 5px 10px; }
+    #messages li:nth-child(odd) { background: #eee; }
+    #tapas { list-style-type: none; margin: 0; padding: 0; }
+    #tapas li { padding: 5px 10px; }
+    #tapas li:nth-child(odd) { background: #eee; }
+    #devices { width: 100%; font: 16px 'Nokia Pure Text', Helvetica, Arial; }
+    #sessions { width: 100%; font: 16px 'Nokia Pure Text', Helvetica, Arial; }
+    table { width: 100%;  border-collapse: collapse;}
+    table, th, td { border: 1px solid black; padding: 4px;}
+    #headline {color: white; background: #183693; border: none; padding: 10px; text-align: center;}
+  </style>
+</head>
+<body>
+    <div id="headline"></div>
+    <table id="sessions">
+    </table>
+    <button id="check" type="button">Check</button>
+    <table id="devices">
+      <tr>
+        <th>Device</th>
+        <th>Time</th>
+        <th>UserID</th>
+        <th>Tag</th>
+        <th>Uri</th>
+        <th>Message</th>
+      </tr>
+    </table>
+    <ul id="messages">
+    </ul>
+
+    <!-- Using external javascript to break dependencies with local node.js -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery-1.12.4.min.js"></script>
+    <script src="/conf/config_img.js"></script>
+    <script>
+      // Globals
+      function device_status(msg) {
+        $('#'+msg.group).empty()
+        .append($('<td />').text(msg.group))
+        .append($('<td />').text(msg.time))
+        .append($('<td />').text(msg.user_id))
+        .append($('<td />').text(msg.tag))
+        .append($('<td />').text(msg.uri))
+        .append($('<td />').text(msg.message));
+      }
+
+      function device_reset(name, text) {
+        $('#'+name).empty()
+        .append($('<td />').text(name))
+        .append($('<td />').text(text))
+        .append($('<td />').text(text))
+        .append($('<td />').text(text))
+        .append($('<td />').text(text))
+        .append($('<td />').text(text));
+      }
+
+      function append_device(name) {
+        row = $('<tr />')
+        .attr('id',name)
+        .append($('<td />').text(name))
+        .append($('<td />').text(""))
+        .append($('<td />').text(""))
+        .append($('<td />').text(""))
+        .append($('<td />').text(""))
+        .append($('<td />').text(""));
+        $('#devices').append(row);
+      }
+
+    
+      function reset_devices(text) {
+        for(var i=0; i < devices.length; i++)
+          device_reset(devices[i], text);
+      }
+
+
+      function logline(textline) {
+        d = new Date();
+        $('#messages').prepend($('<li>').text(d.toISOString() + " " + textline));
+      }
+
+      $(function () {
+        
+        // Socket.io messaging section
+        
+        CONTROL = 'waiter';
+
+        var socket = io({
+          autoConnect: false
+        }).on('connect', function(){
+          socket.emit('join', {group: CONTROL});
+        }).on('log', function(msg){
+          logline("[server] " + msg);
+        }).on('dr_status', function(msg){
+          console.log("Received: " + JSON.stringify(msg));
+          device_status(msg);
+          logline("["+ msg.group + "] {" + msg.local_mix + "," + msg.remote_uri + "}: " + msg.message);
+        });
+        socket.open();
+
+        function broadcast_message(msg) {
+          console.log("Sending message " + JSON.stringify(msg) + " to all devices");
+          
+          logline("Sending message " + JSON.stringify(msg) + " to all devices");
+
+          for(var i=0; i < devices.length; i++) {
+            msg.group = devices[i];
+            socket.emit('dr_command', msg);
+            console.log("Sent: " + JSON.stringify(msg));
+          } 
+
+        }
+        
+        function send_message(msg) {
+          console.log("Sending message " + JSON.stringify(msg) + " to " + msg.group);
+          logline("Sending message " + JSON.stringify(msg) + " to " + msg.group);
+          socket.emit('dr_command', msg);
+          console.log("Sent: " + JSON.stringify(msg));
+        }
+        
+        // ==== Filling content ===
+        // 1. Fill headline
+        $('#headline').text('VQEG IMG test: ' + test_name);
+
+        // 2. Fill session table
+        // First we get the number of sessions and the number of runs
+        var nsessions = sessions.length;
+        console.log("nsessions = " + nsessions);
+        var nruns = 0;
+        for(var i=0; i<nsessions; i++) {
+          if(sessions[i].runs.length > nruns)
+            nruns = sessions[i].runs.length;
+        }
+        
+        // Now we fill:
+        
+        // Session names
+        row = $('<tr />')
+        for(var i=0; i<nsessions; i++) {
+          row.append($('<td />').text(sessions[i].name))
+        }
+        $('#sessions').append(row);
+        
+        // User ids
+        row = $('<tr />')
+        for(var i=0; i<nsessions; i++) {
+          var uid_name = 'userID_' + sessions[i].name;
+          row.append(
+            $('<td />').text("UserID: ")
+            .append(
+              $('<input>').attr('type','text').attr('id',uid_name)
+            )
+          )
+        }
+        $('#sessions').append(row);
+        
+        
+        function build_run_button(run, uid_name) {
+               
+          var run_button = $('<button type="button" style="float: right;">')
+          .click(function(){
+            send_message({
+              group: run.device,
+              uri: run.uri,
+              tag: run.tag,
+              user_id: $(uid_name).val()
+            });
+          })
+          .text("run");
+          
+          return run_button;
+        }
+        
+        // Runs
+        for(var nrun=0; nrun<nruns; nrun++) {
+          row = $('<tr />')
+          for(var i=0; i<nsessions; i++) {
+            var uid_name = '#userID_' + sessions[i].name;
+            cell = $('<td />');
+            if(nruns <= sessions[i].runs.length) {
+              var run = sessions[i].runs[nrun];
+              cell.text(run.name);
+              cell.append(build_run_button(run, uid_name));
+              console.log('Building run ' + JSON.stringify(run) + ' for user ' + uid_name);
+            }
+            row.append(cell);
+          }
+          $('#sessions').append(row);
+        }
+        
+        // 3. Check button
+        $('#check').click(function(){
+          reset_devices("checking...");
+          broadcast_message({tag: '', user_id: ''});
+        });
+
+        // 4. Table of devices
+        for(var i=0; i < devices.length; i++) {
+          append_device(devices[i]);
+        }
+
+      });
+      </script>
+</body>
+</html>

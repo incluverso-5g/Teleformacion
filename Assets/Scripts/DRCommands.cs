@@ -88,6 +88,8 @@ public class DRCommands : MonoBehaviour, ISbspController
     bool minusten=false;
     bool plusten=false;
     bool resetSpeed=false;
+    bool toogleButtons = false;
+    bool toogleUI = false;
 
     private bool isLoading = false;
 
@@ -340,6 +342,17 @@ public class DRCommands : MonoBehaviour, ISbspController
             player.SpeedReset();
             resetSpeed = false;
         }
+        if (toogleButtons)
+        {
+            player.toogleButtons();
+            toogleButtons = false;
+        }
+
+        if (toogleUI)
+        {
+            player.toogleUI();
+            toogleUI = false;
+        }
 
     }
 
@@ -377,6 +390,8 @@ public class DRCommands : MonoBehaviour, ISbspController
         if (response.ToString().Contains("resSpeed")) { resetSpeed = true; }
         if (response.ToString().Contains("volumeup")) { volumeUp = true; }
         if (response.ToString().Contains("volumedown")) { VolumeDown = true; }
+        if (response.ToString().Contains("toogleUI")) { toogleUI = true; }
+        if (response.ToString().Contains("toogleButtons")) { toogleButtons = true; }
         try
         {
             DRCommand command =  response.GetValue<DRCommand>();
