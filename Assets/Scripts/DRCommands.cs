@@ -11,6 +11,8 @@ using UnityEngine.Android;
 using UnityEngine.UI;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using UnityEngine.Video;
+using Unity.VisualScripting;
 
 public class DRCommand
 {
@@ -40,12 +42,12 @@ public class DRCommand
 public class DRCommands : MonoBehaviour, ISbspController
 {
     private SocketIOClient.SocketIO client; // Fully qualify the type to avoid namespace conflict
-    
+    private float volume;
     private const string NO_REMOTE_URI = "__empty__";
     public string ini_file = "player.ini";
     //public HeadsetTracker tracker;
-
     public VideoLoader player;
+    public VideoPlayer playerPlayer;
     //public GameObject screen;
     
     // They will load from config file, so they are private now
@@ -68,6 +70,25 @@ public class DRCommands : MonoBehaviour, ISbspController
 
 
     bool loadNewContent = false;
+    bool playContent = false;
+    bool pauseContent = false;
+    bool reset=false;
+    bool near=false;
+    bool far=false; 
+    bool right=false;
+    bool left=false; 
+    bool sphereDecrease=false; 
+    bool sphereIcrease=false; 
+    bool speedDown=false; 
+    bool speedUp=false; 
+    bool VolumeDown=false; 
+    bool volumeUp=false;
+    bool up = false;
+    bool down = false;
+    bool minusten=false;
+    bool plusten=false;
+    bool resetSpeed=false;
+
     private bool isLoading = false;
 
     bool isConnected = false; // Flag to track connection status
@@ -185,8 +206,8 @@ public class DRCommands : MonoBehaviour, ISbspController
 
         client.On("dr_command", OnDrCommand);
 
-        Debug.Log("Disabling automatic start from video player!!");
-        player.automaticStart = false;
+        //Debug.Log("Disabling automatic start from video player!!");
+        //player.automaticStart = false;
     }
 
     // Start is called before the first frame update
@@ -229,12 +250,133 @@ public class DRCommands : MonoBehaviour, ISbspController
             //StartCoroutine(LoadNewContentLocal());
             LoadNewContentImmediate();
         }
+        if(pauseContent)
+        {
+            player.PausePlayer();
+            pauseContent = false;
+        }
+        if(playContent)
+        {
+            player.playPlayer();
+            playContent = false;
+        }
+        if (volumeUp)
+        {
+            player.VolumeUp();
+            volumeUp = false;
+        }
+        if (VolumeDown)
+        {
+            player.VolumeDown();
+            VolumeDown = false;
+        }
+        if (speedUp)
+        {
+            player.SpeedUp();
+            speedUp = false;
+        }
+        if (speedDown)
+        {
+            player.SpeedDown();
+            speedDown = false;
+        }
+        if (sphereIcrease)
+        {
+            player.SphereIncrease();
+            sphereIcrease = false;
+        }
+        if (sphereDecrease)
+        {   
+            player.SphereDecrease();
+            sphereDecrease = false;
+        }
+        if (left)
+        {
+            player.Left();
+            left = false;
+        }
+        if (right)
+        {
+            player.Right();
+            right = false;
+        }
+        if (far)
+        {
+            player.Further();
+            far = false;
+        }
+        if (near)
+        {
+            player.Closer();
+            near = false;
+        }
+        if (up)
+        {
+            player.Upper();
+            up = false;
+        }
+        if (down)
+        {
+            player.Below();
+            down = false;
+        }
+        if (plusten)
+        {
+            player.plusTenSeconds();
+            plusten = false;
+        }
+        if (minusten)
+        {
+            player.minusTenSeconds();
+            minusten = false;
+        }
+        if (reset)
+        {
+            player.SphereReset();
+            reset = false;
+        }
+        if (resetSpeed)
+        {
+            player.SpeedReset();
+            resetSpeed = false;
+        }
+
     }
 
     public void OnDrCommand(SocketIOResponse response)
     {
-
+        //volume = player.videoPlayer.GetDirectAudioVolume(0);
         Debug.Log($"OnDrCommand: {response}");
+        string check = response.ToString();
+        if (response.ToString().Contains("pause")) {
+            Debug.Log("TryingtoPause");
+            pauseContent = true;
+            ReportStatus("pause");
+        }
+        if (response.ToString().Contains("play")) { 
+            
+            Debug.Log("TryingtoPlay");
+            playContent = true;
+            ReportStatus("play");
+        }
+        //if (response.ToString().Contains("volumedown")) GetComponent<VideoPlayer>().SetDirectAudioVolume(0, Mathf.Min(1, volume * 1.1f));
+
+        if (response.ToString().Contains("10")) {plusten= true; }
+        if (response.ToString().Contains("-10")) {minusten= true; }
+        if (response.ToString().Contains("speedup")) {speedUp = true; }
+        if (response.ToString().Contains("speeddown")) { speedDown= true; }
+        if (response.ToString().Contains("SphereIncr")) {sphereIcrease = true; }
+        if (response.ToString().Contains("SphereDecr")) {sphereDecrease = true; }
+        if (response.ToString().Contains("left")) {left = true; }
+        if (response.ToString().Contains("right")) { right= true; }
+        if (response.ToString().Contains("far")) {far = true; }
+        if (response.ToString().Contains("near")) {near = true; }
+        if(response.ToString().Contains("above")) { up = true; }
+        if (response.ToString().Contains("under")) { down = true; }
+        if (response.ToString().Contains("reset")) { reset= true; }
+        if (response.ToString().Contains("resSpeed")) { resetSpeed = true; }
+        if (response.ToString().Contains("volumeup")) { volumeUp = true; }
+        if (response.ToString().Contains("volumedown")) { VolumeDown = true; }
         try
         {
             DRCommand command =  response.GetValue<DRCommand>();
@@ -246,7 +388,6 @@ public class DRCommands : MonoBehaviour, ISbspController
                 ReportStatus("status check");
                 return;
             }
-
             uri = command.Uri;
             video_format = command.VideoFormat;
             content_angle = int.Parse(command.Angle);
@@ -288,7 +429,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             Debug.Log("Starting content: " + uri);
             player.SetupInputPlaybin(video_format, uri, this);
             player.SetRotation(content_angle);
-            player.SetVolume(audioVolume);
+            //player.SetVolume(audioVolume);
         }
         else {
             Debug.Log("No content to start: " + uri);
@@ -320,7 +461,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             //player.gameObject.SetActive(true);
             player.SetupInputPlaybin(video_format, uri, this);
             player.SetRotation(content_angle);
-            player.SetVolume(audioVolume);
+            //player.SetVolume(audioVolume);
             
             //screen.SetActive(false); // This is a hack! Really!
             //if(tracker != null)

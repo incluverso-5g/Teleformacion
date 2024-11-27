@@ -26,6 +26,7 @@ public class HandMeshUI : MonoBehaviour
 {
     public SphereCollider[] knobs;
     public TextMesh[] readouts;
+    public float[] valuesReadouts;
     public Transform SphereTransform;
 
     int rightHeldKnob = -1;
@@ -40,6 +41,7 @@ public class HandMeshUI : MonoBehaviour
 
     void Start()
     {
+        valuesReadouts = new float[5];
         //SetSliderValue(0, rightMask.radialDivisions, false);
         SetSliderValue(0, 0.0f, false);
         SetSliderValue(1, 0.0f, false);
@@ -49,6 +51,7 @@ public class HandMeshUI : MonoBehaviour
         //SetSliderValue(2, rightMask.fingerTaper, false);
         //SetSliderValue(3, rightMask.fingerTipLength, false);
         SetSliderValue(4, 0.0f, false);
+        
     }
 
     void Update()
@@ -116,7 +119,12 @@ public class HandMeshUI : MonoBehaviour
         if(knobs[sliderID].transform.GetComponent<MeshRenderer>() != null)
             knobs[sliderID].transform.GetComponent<MeshRenderer>().material.color = color;
     }
-    void SetSliderValue(int sliderID, float value, bool isNormalized)
+
+    public float GetSliderValue(int sliderID)
+    {
+        return valuesReadouts[sliderID];
+    }
+    public void SetSliderValue(int sliderID, float value, bool isNormalized)
     {
         float sliderStart = 0.0f;
         float sliderEnd = 1.0f;
@@ -153,6 +161,7 @@ public class HandMeshUI : MonoBehaviour
 
         float absoluteValue = isNormalized ? value * (sliderEnd - sliderStart) + sliderStart : value;
         float normalizedValue = isNormalized ? value : (value - sliderStart) / (sliderEnd - sliderStart);
+        valuesReadouts[sliderID] = absoluteValue;
         knobs[sliderID].transform.localPosition = Vector3.right * normalizedValue * sliderScale;
         readouts[sliderID].text = string.Format(displayString, absoluteValue);
 
