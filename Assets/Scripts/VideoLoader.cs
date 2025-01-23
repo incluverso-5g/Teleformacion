@@ -156,6 +156,17 @@ public class VideoLoader : MonoBehaviour
             }
         
     }
+    public void ChangeVideo(string uri)
+    {
+        
+        string newPath=System.IO.Path.Combine("file://sdcard/Movies", uri);
+        Debug.Log("Trying to load: " + newPath);
+        videoPlayer.Stop();
+        
+        videoPlayer.url = newPath;
+        videoPlayer.Play();
+
+    }
 
     public void plusTenSeconds() 
     {
