@@ -3,16 +3,20 @@ var sessions = [
   {
     name: "VideoPlayer Control",
     runs: [
-      {name: "play", tag: 'PABLO', device: 'PABLO', uri: 'play'},
-      {name: "pause", tag: 'PABLO', device: 'PABLO', uri: 'pause'},
-	  {name: "+10 s", tag: 'PABLO', device: 'PABLO', uri: '10'},
-	  {name: "-10 s", tag: 'PABLO', device: 'PABLO', uri: '-10'},
-      {name: "volumeup", tag: 'PABLO', device: 'PABLO', uri: 'volumeup'},
-	  {name: "volumedown", tag: 'PABLO', device: 'PABLO', uri: 'volumedown'},
-	  {name: "speedup", tag: 'PABLO', device: 'PABLO', uri: 'speedup'},
-	  {name: "speedown", tag: 'PABLO', device: 'PABLO', uri: 'speeddown'},
-	  {name: "resetspeed", tag: 'PABLO', device: 'PABLO', uri: 'resSpeed'},
-	  {name: "toogleUI", tag: 'PABLO', device: 'PABLO', uri: 'toogleUI'}
+      {name: "play", tag: 'CARLOS', device: 'CARLOS', uri: 'play'},
+      {name: "pause", tag: 'CARLOS', device: 'CARLOS', uri: 'pause'},
+	  {name: "+10 s", tag: 'CARLOS', device: 'CARLOS', uri: '10'},
+	  {name: "-10 s", tag: 'CARLOS', device: 'CARLOS', uri: '-10'},
+      {name: "volumeup", tag: 'CARLOS', device: 'CARLOS', uri: 'volumeup'},
+	  {name: "volumedown", tag: 'CARLOS', device: 'CARLOS', uri: 'volumedown'},
+	  {name: "speedup", tag: 'CARLOS', device: 'CARLOS', uri: 'speedup'},
+	  {name: "speedown", tag: 'CARLOS', device: 'CARLOS', uri: 'speeddown'},
+	  {name: "resetspeed", tag: 'CARLOS', device: 'CARLOS', uri: 'resSpeed'},
+	  {name: "toogleUI", tag: 'CARLOS', device: 'CARLOS', uri: 'toogleUI'},
+	  {name: "Enable Video", tag: 'CARLOS', device: 'CARLOS', uri: 'enableVideo'},
+	  {name: "Disable Video", tag: 'CARLOS', device: 'CARLOS', uri: 'disableVideo'}
+	  
+	  
 
 	  
     ]
@@ -20,35 +24,39 @@ var sessions = [
   {
     name: "Sphere Control",
     runs: [
-	  {name: "Píldora1", tag: 'PABLO2', device: 'PABLO', uri: ';FJ23_COCINA_INMERSIVA_1.mp4;'},
-	  {name: "Píldora2", tag: 'PABLO2', device: 'PABLO', uri: ';FJ23_COCINA_INMERSIVA_2.mp4;'},
-	  {name: "Píldora3", tag: 'PABLO2', device: 'PABLO', uri: ';FJ23_COCINA_INMERSIVA_3.mp4;'},
-	  {name: "Píldora4 (Peso)", tag: 'PABLO2', device: 'PABLO', uri: ';FJ23_COCINA_INMERSIVA_05_PESO.mp4;'},
-	  {name: "Píldora6 (Horno sin fotos)", tag: 'PABLO2', device: 'PABLO', uri: ';FJ23_COCINA_INMERSIVA_06_HORNO.mp4;'},
-	  {name: "Píldora6 (Horno con fotos)", tag: 'PABLO2', device: 'PABLO', uri: ';Secuencia_06_HORNO_CON_FOTOS.mp4;'},
-	  {name: "Píldora7 (Cucharadas)", tag: 'PABLO2', device: 'PABLO', uri: ';Secuencia_07_CUCHARADAS.mp4;'},	  
-	  {name: "Píldora6 (Horno sin fotos)", tag: 'PABLO2', device: 'PABLO', uri: ';FJ23_COCINA_INMERSIVA_06_HORNO.mp4;'},
-	  {name: "Píldora6 (Horno con fotos)", tag: 'PABLO2', device: 'PABLO', uri: ';Secuencia_06_HORNO_CON_FOTOS.mp4;'},
-	  {name: "Píldora7 (Cucharadas)", tag: 'PABLO2', device: 'PABLO', uri: ';Secuencia_07_CUCHARADAS.mp4;'}
+	  {name: "Píldora1", tag: 'CARLOS2', device: 'CARLOS', uri: ';FJ23_COCINA_INMERSIVA_1.mp4;'},
+	  {name: "Píldora2", tag: 'CARLOS2', device: 'CARLOS', uri: ';FJ23_COCINA_INMERSIVA_2.mp4;'},
+	  {name: "Píldora3", tag: 'CARLOS2', device: 'CARLOS', uri: ';FJ23_COCINA_INMERSIVA_3.mp4;'},
+	  {name: "Píldora4 (Peso)", tag: 'CARLOS2', device: 'CARLOS', uri: ';FJ23_COCINA_INMERSIVA_05_PESO.mp4;'},
+	  {name: "Píldora6 (Horno sin fotos)", tag: 'CARLOS2', device: 'CARLOS', uri: ';FJ23_COCINA_INMERSIVA_06_HORNO.mp4;'},
+	  {name: "Píldora6 (Horno con fotos)", tag: 'CARLOS2', device: 'CARLOS', uri: ';Secuencia_06_HORNO_CON_FOTOS.mp4;'},
+	  {name: "Píldora7 (Cucharadas)", tag: 'CARLOS2', device: 'CARLOS', uri: ';Secuencia_07_CUCHARADAS.mp4;'},	  
+	  {name: "Píldora6 (Horno sin fotos)", tag: 'CARLOS2', device: 'CARLOS', uri: ';FJ23_COCINA_INMERSIVA_06_HORNO.mp4;'},
+	  {name: "Píldora6 (Horno con fotos)", tag: 'CARLOS2', device: 'CARLOS', uri: ';Secuencia_06_HORNO_CON_FOTOS.mp4;'},
+	  {name: "Píldora7 (Cucharadas)", tag: 'CARLOS2', device: 'CARLOS', uri: ';Secuencia_07_CUCHARADAS.mp4;'},
+	  	  {name: "Enable Video", tag: 'CARLOS', device: 'CARLOS', uri: 'enableVideo'},
+	  {name: "Disable Video", tag: 'CARLOS', device: 'CARLOS', uri: 'disableVideo'}
 	  
     ]
   },
   {
     name: "Video Selection",
     runs: [
-	  {name: "SpherePercentajeUp", tag: 'PABLO', device: 'PABLO', uri: 'SphereIncr'},
-	  {name: "SpherePercentajeDown", tag: 'PABLO', device: 'PABLO', uri: 'SphereDecr'},
-	  {name: "Left", tag: 'PABLO', device: 'PABLO', uri: 'left'},
-	  {name: "Right", tag: 'PABLO', device: 'PABLO', uri: 'right'},
-	  {name: "Far", tag: 'PABLO', device: 'PABLO', uri: 'far'},
-	  {name: "Near", tag: 'PABLO', device: 'PABLO', uri: 'near'},
-	  {name: "Up", tag: 'PABLO', device: 'PABLO', uri: 'above'},
-	  {name: "Down", tag: 'PABLO', device: 'PABLO', uri: 'under'},
-	  {name: "Reset", tag: 'PABLO', device: 'PABLO', uri: 'reset'},
-	  {name: "toogleButtons", tag: 'PABLO3', device: 'PABLO', uri: 'toogleButtons'}
+	  {name: "SpherePercentajeUp", tag: 'CARLOS', device: 'CARLOS', uri: 'SphereIncr'},
+	  {name: "SpherePercentajeDown", tag: 'CARLOS', device: 'CARLOS', uri: 'SphereDecr'},
+	  {name: "Left", tag: 'CARLOS', device: 'CARLOS', uri: 'left'},
+	  {name: "Right", tag: 'CARLOS', device: 'CARLOS', uri: 'right'},
+	  {name: "Far", tag: 'CARLOS', device: 'CARLOS', uri: 'far'},
+	  {name: "Near", tag: 'CARLOS', device: 'CARLOS', uri: 'near'},
+	  {name: "Up", tag: 'CARLOS', device: 'CARLOS', uri: 'above'},
+	  {name: "Down", tag: 'CARLOS', device: 'CARLOS', uri: 'under'},
+	  {name: "Reset", tag: 'CARLOS', device: 'CARLOS', uri: 'reset'},
+	  {name: "toogleButtons", tag: 'CARLOS3', device: 'CARLOS', uri: 'toogleButtons'},
+	  	  {name: "Enable Video", tag: 'CARLOS', device: 'CARLOS', uri: 'enableVideo'},
+	  {name: "Disable Video", tag: 'CARLOS', device: 'CARLOS', uri: 'disableVideo'}
 	  
     ]
   }
   
 ];
-var devices = ['PABLO', 'PABLO','PABLO3'];
+var devices = ['CARLOS', 'CARLOS','CARLOS3'];

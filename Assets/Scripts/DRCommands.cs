@@ -52,7 +52,7 @@ public class DRCommands : MonoBehaviour, ISbspController
     
     // They will load from config file, so they are private now
     string device = "PABLO";
-    string socketio_uri = "http://192.168.23.57:3000"; //"ws://127.0.0.1:3000/socket.io/?EIO=4&transport=websocket";
+    string socketio_uri = "http://192.168.137.1:3000"; //"ws://127.0.0.1:3000/socket.io/?EIO=4&transport=websocket";
     string socketio_eio = "3";
 
     string influxdb_uri = "udp://127.0.0.1:8089";
@@ -92,6 +92,8 @@ public class DRCommands : MonoBehaviour, ISbspController
     bool toogleButtons = false;
     bool toogleUI = false;
     bool ChangeVideo = false;
+    bool enableVideo=false;
+    bool disableVideo = false;
 
 
     private bool isLoading = false;
@@ -361,6 +363,16 @@ public class DRCommands : MonoBehaviour, ISbspController
             player.ChangeVideo(newVideoPath);
             ChangeVideo = false;
         }
+        if(enableVideo)
+        {
+            player.setVideoEnable(true);
+            enableVideo = false;
+        }
+        if(disableVideo)
+        {
+            player.setVideoEnable(false);
+            disableVideo = false;
+        }
 
     }
 
@@ -400,6 +412,8 @@ public class DRCommands : MonoBehaviour, ISbspController
         if (response.ToString().Contains("volumedown")) { VolumeDown = true; }
         if (response.ToString().Contains("toogleUI")) { toogleUI = true; }
         if (response.ToString().Contains("toogleButtons")) { toogleButtons = true; }
+        if (response.ToString().Contains("enableVideo")) { enableVideo = true; }
+        if (response.ToString().Contains("disableVideo")) { disableVideo = true; }
         if (response.ToString().Contains(".mp4")) { ChangeVideo = true; newVideoPath = response.ToString().Split(";")[1]; }
         try
         {

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Video;
+using UnityEngine.Android;
 
 public class VideoLoader : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class VideoLoader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            GetPermission(Permission.ExternalStorageRead);
+#endif
         videoPlayer = GetComponent<VideoPlayer>();
         string VideoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videofile);
         videoPlayer.loopPointReached += OnEndReached;
@@ -36,7 +40,17 @@ public class VideoLoader : MonoBehaviour
     {
         //if(videoPlayer.isPrepared) videoPlayer.Play();
     }
+    private static void GetPermission(string permission)
+    {
+        if (Permission.HasUserAuthorizedPermission(permission))
+        {
+            Debug.Log("Permission is already granted.");
+            return;
+        }
 
+        Debug.LogFormat("Requesting permission to {0}.", permission);
+        Permission.RequestUserPermission(permission);
+    }
     public void SetupInputPlaybin(string format, string uri, ISbspController sbspController=null) {
 
         if(started) {
@@ -156,14 +170,39 @@ public class VideoLoader : MonoBehaviour
             }
         
     }
+    public void setVideoEnable(bool setEnable)
+    {
+        if (setEnable) { 
+            videoPlayer.Play(); 
+            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = true; 
+        }else {
+            videoPlayer.Pause();
+            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
+            
     public void ChangeVideo(string uri)
     {
+
+        var moviesPath = "";
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        using var envClass = new UnityEngine.AndroidJavaClass("android.os.Environment");  
+        using var moviesDir = envClass.CallStatic<UnityEngine.AndroidJavaObject>("getExternalStoragePublicDirectory", "Movies");       
+        moviesPath = moviesDir.Call<string>("getAbsolutePath");        
         
-        string newPath=System.IO.Path.Combine("file://sdcard/Movies", uri);
-        Debug.Log("Trying to load: " + newPath);
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        moviesPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile), "Movies");  
+        
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        moviesPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
+
+#else
+        moviesPath = "Movies directory path is not supported on this platform.";  
+#endif
         videoPlayer.Stop();
-        
-        videoPlayer.url = newPath;
+        videoPlayer.url = moviesPath + "/" + uri;
+        Debug.Log("Trying to load: " + videoPlayer.url);
         videoPlayer.Play();
 
     }
