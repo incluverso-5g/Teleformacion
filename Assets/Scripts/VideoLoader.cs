@@ -18,7 +18,10 @@ public class VideoLoader : MonoBehaviour
 
     private IEnumerator periodicUpdateCoroutine = null;
 
+    private string moviesPath = "";
+
     protected bool started = false;
+    protected bool enabled  = true;
 
     // Start is called before the first frame update
     void Start()
@@ -27,12 +30,13 @@ public class VideoLoader : MonoBehaviour
             GetPermission(Permission.ExternalStorageRead);
 #endif
         videoPlayer = GetComponent<VideoPlayer>();
-        string VideoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videofile);
         videoPlayer.loopPointReached += OnEndReached;
         videoPlayer.errorReceived += OnError;
-        Debug.Log(VideoPath);
+        SetMoviesPath();
+        Debug.Log(moviesPath);
+        videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
         if (automaticStart)
-            SetupInputPlaybin("video360", VideoPath);
+            SetupInputPlaybin("video360", videofile);
     }
 
     // Update is called once per frame
@@ -51,6 +55,24 @@ public class VideoLoader : MonoBehaviour
         Debug.LogFormat("Requesting permission to {0}.", permission);
         Permission.RequestUserPermission(permission);
     }
+
+    private void SetMoviesPath() {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        using var envClass = new UnityEngine.AndroidJavaClass("android.os.Environment");  
+        using var moviesDir = envClass.CallStatic<UnityEngine.AndroidJavaObject>("getExternalStoragePublicDirectory", "Movies");       
+        moviesPath = moviesDir.Call<string>("getAbsolutePath");        
+        
+#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        moviesPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile), "Movies");  
+        
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        moviesPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
+
+#else
+        Debug.LogWarning("No Movies path found in the system. Using StreamingAssets instead")
+        moviesPath = Application.streamingAssetsPath;  
+#endif
+    }
     public void SetupInputPlaybin(string format, string uri, ISbspController sbspController=null) {
 
         if(started) {
@@ -60,20 +82,21 @@ public class VideoLoader : MonoBehaviour
 
         if (!Uri.TryCreate(uri, UriKind.Absolute, out Uri uriResult) )
         {
-            // If it is not an uri, we assume it is a file on StreamingAssets
-            uri = System.IO.Path.Combine(Application.streamingAssetsPath, uri);
+            // If it is not an uri, we assume it is a file on moviesPath
+            uri = System.IO.Path.Combine(moviesPath, uri);
         }
         Debug.Log($"Playing uri: {uri}");
         videoPlayer.url = uri;
-        //videoPlayer.Prepare();
-        //videoPlayer.Play();
+        videoPlayer.Prepare();
+        videoPlayer.Play();
         this.sbspController = sbspController;
 
         periodicUpdateCoroutine = PeriodicUpdate();
         StartCoroutine(periodicUpdateCoroutine);
 
         started = true;
-
+        if(enabled)
+            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = true; 
     }
 
     public void StopAndClean() {
@@ -82,11 +105,45 @@ public class VideoLoader : MonoBehaviour
         periodicUpdateCoroutine = null;
         videoPlayer.Stop();
         started = false;
+        if(enabled)
+            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false; 
     }
+
+    /*
+    public void ChangeVideo(string uri)
+    {
+        videoPlayer.Stop();
+        videoPlayer.url = moviesPath + "/" + uri;
+        Debug.Log("Trying to load: " + videoPlayer.url);
+        videoPlayer.Play();
+
+    }*/
+
+    public double GetPosition() {
+        return videoPlayer.time;
+    }
+
+    public void setVideoEnable(bool setEnable)
+    {
+        if (setEnable) { 
+            if(started)
+                videoPlayer.Play();
+            enabled = true;
+            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = true; 
+        }
+        else {
+            if(started)
+                videoPlayer.Pause();
+            enabled = false;
+            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
+
 
     public void SetRotation(float angle) {
 
     }
+    
     public void SpeedUp()
     {
         videoPlayer.playbackSpeed = (Mathf.Min(videoPlayer.playbackSpeed + 0.1f, 2.0f));
@@ -170,42 +227,8 @@ public class VideoLoader : MonoBehaviour
             }
         
     }
-    public void setVideoEnable(bool setEnable)
-    {
-        if (setEnable) { 
-            videoPlayer.Play(); 
-            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = true; 
-        }else {
-            videoPlayer.Pause();
-            videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
-        }
-    }
+
             
-    public void ChangeVideo(string uri)
-    {
-
-        var moviesPath = "";
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        using var envClass = new UnityEngine.AndroidJavaClass("android.os.Environment");  
-        using var moviesDir = envClass.CallStatic<UnityEngine.AndroidJavaObject>("getExternalStoragePublicDirectory", "Movies");       
-        moviesPath = moviesDir.Call<string>("getAbsolutePath");        
-        
-#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-        moviesPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile), "Movies");  
-        
-#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-        moviesPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
-
-#else
-        moviesPath = "Movies directory path is not supported on this platform.";  
-#endif
-        videoPlayer.Stop();
-        videoPlayer.url = moviesPath + "/" + uri;
-        Debug.Log("Trying to load: " + videoPlayer.url);
-        videoPlayer.Play();
-
-    }
 
     public void plusTenSeconds() 
     {
@@ -230,11 +253,17 @@ public class VideoLoader : MonoBehaviour
         while(sbspController != null && statusReportPeriod > 0)
         {
             if (started) {
-                double seconds = videoPlayer.time;
+                if(videoPlayer.isPaused) {
+                    sbspController.UpdateStreamStatus("pause", false);
+                }
+                else {
+                    sbspController.UpdateStreamStatus("playing", false);
+                /*double seconds = videoPlayer.time;
                 int minutes = (int)(seconds / 60);
                 int remainingSeconds = (int)(seconds % 60);
                 string pos =  $"{minutes:D2}:{remainingSeconds:D2}";
-                sbspController.UpdateStreamStatus(pos, false);
+                sbspController.UpdateStreamStatus(pos, false);*/
+                }
             }
             else {
                 sbspController.UpdateStreamStatus("stopped", false);

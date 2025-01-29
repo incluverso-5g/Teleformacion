@@ -16,6 +16,9 @@ using Unity.VisualScripting;
 
 public class DRCommand
 {
+    [JsonPropertyName("action")]
+    public string Action { get; set; } = "play";
+
     [JsonPropertyName("remote_uri")]
     public string Uri { get; set; } = null;
 
@@ -91,7 +94,7 @@ public class DRCommands : MonoBehaviour, ISbspController
     bool resetSpeed=false;
     bool toogleButtons = false;
     bool toogleUI = false;
-    bool ChangeVideo = false;
+    //bool ChangeVideo = false;
     bool enableVideo=false;
     bool disableVideo = false;
 
@@ -261,11 +264,13 @@ public class DRCommands : MonoBehaviour, ISbspController
         {
             player.PausePlayer();
             pauseContent = false;
+            UpdateVideoStatus("paused", false);
         }
         if(playContent)
         {
             player.playPlayer();
             playContent = false;
+            UpdateVideoStatus("playing", false);
         }
         if (volumeUp)
         {
@@ -358,20 +363,24 @@ public class DRCommands : MonoBehaviour, ISbspController
             player.toogleUI();
             toogleUI = false;
         }
+        /*
         if (ChangeVideo)
         {
             player.ChangeVideo(newVideoPath);
             ChangeVideo = false;
         }
+        */
         if(enableVideo)
         {
             player.setVideoEnable(true);
             enableVideo = false;
+            UpdateVideoStatus("playing", false);
         }
         if(disableVideo)
         {
             player.setVideoEnable(false);
             disableVideo = false;
+            UpdateVideoStatus("-", false);
         }
 
     }
@@ -380,6 +389,7 @@ public class DRCommands : MonoBehaviour, ISbspController
     {
         //volume = player.videoPlayer.GetDirectAudioVolume(0);
         Debug.Log($"OnDrCommand: {response}");
+        /*
         string check = response.ToString();
         if (response.ToString().Contains("pause")) {
             Debug.Log("TryingtoPause");
@@ -415,40 +425,80 @@ public class DRCommands : MonoBehaviour, ISbspController
         if (response.ToString().Contains("enableVideo")) { enableVideo = true; }
         if (response.ToString().Contains("disableVideo")) { disableVideo = true; }
         if (response.ToString().Contains(".mp4")) { ChangeVideo = true; newVideoPath = response.ToString().Split(";")[1]; }
+        */
+
         try
         {
             DRCommand command =  response.GetValue<DRCommand>();
 
-             // Use the deserialized data
+            if (command.Action.Equals("10")) {plusten= true; }
+            if (command.Action.Equals("-10")) {minusten= true; }
+            if (command.Action.Equals("speedup")) {speedUp = true; }
+            if (command.Action.Equals("speeddown")) { speedDown= true; }
+            if (command.Action.Equals("SphereIncr")) {sphereIcrease = true; }
+            if (command.Action.Equals("SphereDecr")) {sphereDecrease = true; }
+            if (command.Action.Equals("left")) {left = true; }
+            if (command.Action.Equals("right")) { right= true; }
+            if (command.Action.Equals("far")) {far = true; }
+            if (command.Action.Equals("near")) {near = true; }
+            if (command.Action.Equals("above")) { up = true; }
+            if (command.Action.Equals("under")) { down = true; }
+            if (command.Action.Equals("reset")) { reset= true; }
+            if (command.Action.Equals("resSpeed")) { resetSpeed = true; }
+            if (command.Action.Equals("volumeup")) { volumeUp = true; }
+            if (command.Action.Equals("volumedown")) { VolumeDown = true; }
+            if (command.Action.Equals("toogleUI")) { toogleUI = true; }
+            if (command.Action.Equals("toogleButtons")) { toogleButtons = true; }
+            if (command.Action.Equals("enableVideo")) { enableVideo = true; }
+            if (command.Action.Equals("disableVideo")) { disableVideo = true; }
 
-            if(command.Uri == null) {
+            if (command.Action.Equals("pause")) {
+                pauseContent = true;
+                ReportStatus("pause");
+            }
+
+            if ((command.Action == "check") || 
+                (command.Action == "play" && command.Uri == null)) {
                 Debug.Log("dr_command: check");
                 ReportStatus("status check");
                 return;
             }
-            uri = command.Uri;
-            video_format = command.VideoFormat;
-            content_angle = int.Parse(command.Angle);
-            title = command.Name;
-            user_id = command.UserId;
-            playlist = command.Playlist;
 
-            if (command.AudioVolume != "") {
-                audioVolume = Convert.ToInt32(command.AudioVolume) / 100F;
-                if (audioVolume > 1.0F || audioVolume < 0) {
-                    Debug.Log(String.Format("recevied bad audio volume '" + command.AudioVolume + "'"));
-                    audioVolume = 1.0F;
+            if (command.Action == "play") {
+                video_format = command.VideoFormat;
+                content_angle = int.Parse(command.Angle);
+                title = command.Name;
+                user_id = command.UserId;
+                playlist = command.Playlist;
+
+                if (command.AudioVolume != "") {
+                    audioVolume = Convert.ToInt32(command.AudioVolume) / 100F;
+                    if (audioVolume > 1.0F || audioVolume < 0) {
+                        Debug.Log(String.Format("recevied bad audio volume '" + command.AudioVolume + "'"));
+                        audioVolume = 1.0F;
+                    }
+                    else
+                    {
+                        Debug.Log(String.Format("Setting audio volume '" + command.AudioVolume + "'"));
+                    }
                 }
-                else
-                {
-                    Debug.Log(String.Format("Setting audio volume '" + command.AudioVolume + "'"));
+
+                if(command.Uri == "" || command.Uri == uri) {
+                    playContent = true; // Continue playing
+                }
+                else {
+                    uri = command.Uri;
+                    loadNewContent = true;
+                    Debug.Log(String.Format("dr_command: {0} -- {1} -- {2} -- {3} -- {4}", uri, video_format, title, playlist, audioVolume));
                 }
             }
-
-            Debug.Log(String.Format("dr_command: {0} -- {1} -- {2} -- {3} -- {4}", uri, video_format, title, playlist, audioVolume));
-
-            loadNewContent = true;
-            ReportStatus("ok");
+            
+            if(command.Action == "stop") {
+                uri = NO_REMOTE_URI;
+                title = "";
+                loadNewContent = true;
+                Debug.Log("Stop");
+            }
 
         }
         catch (Exception ex)
@@ -472,6 +522,7 @@ public class DRCommands : MonoBehaviour, ISbspController
         else {
             Debug.Log("No content to start: " + uri);
         }
+        ReportStatus("ok");
 
     }
 
@@ -513,7 +564,7 @@ public class DRCommands : MonoBehaviour, ISbspController
 
     } 
 
-    public async void ReportStatus(string message)
+    public async void ReportStatus(string message, bool connected=true)
     {
         var data = new Dictionary<string, object>
         {
@@ -523,6 +574,8 @@ public class DRCommands : MonoBehaviour, ISbspController
             { "remote_uri", uri },
             { "video_status", video_status },
             { "cell_info", "N/A" },
+            { "connected", connected},
+            { "position", player.GetPosition()},
             { "message", message }
         };
         Debug.Log(String.Format("dr_status: {0} -- {1} -- {2} -- {3}", device, uri, video_status, message));
@@ -555,7 +608,7 @@ public class DRCommands : MonoBehaviour, ISbspController
     private void OnApplicationQuit()
     {
         Debug.Log("Application closed");
-        ReportStatus("Application closed");
+        ReportStatus("Application closed", false);
     }
 
      public void OnApplicationPause(bool pause)
@@ -563,7 +616,7 @@ public class DRCommands : MonoBehaviour, ISbspController
         if (pause)
         {
             Debug.Log("App pause");
-            ReportStatus("App pause");
+            ReportStatus("App pause", false);
         }
         else {
             Debug.Log("App resume");

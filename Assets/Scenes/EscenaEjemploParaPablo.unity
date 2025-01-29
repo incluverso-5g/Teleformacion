@@ -3751,7 +3751,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 1
   m_WaitForFirstFrame: 1
@@ -3790,7 +3790,7 @@ MonoBehaviour:
   statusReportPeriod: 2
   InteractableObject: {fileID: 16024882}
   HandMeshObject: {fileID: 1279145089}
-  automaticStart: 1
+  automaticStart: 0
 --- !u!1 &1162522712
 GameObject:
   m_ObjectHideFlags: 0
