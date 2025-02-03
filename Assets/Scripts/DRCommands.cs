@@ -159,6 +159,10 @@ public class DRCommands : MonoBehaviour, ISbspController
             socketio_uri = ini.ReadValue("SocketIO", "uri", socketio_uri);
             socketio_eio = ini.ReadValue("SocketIO", "EIO", socketio_eio);
             Debug.Log("using server uri: '" + socketio_uri+"' device: '" + device + "'");
+            enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
+            toogleButtons = ini.ReadValue("VideoSphereConfig", "disabledButtons", toogleButtons);
+            toogleUI = ini.ReadValue("VideoSphereConfig", "disabledUI", toogleUI);
+            Debug.Log("Config of sphere is'" + enableVideo + "' device: '" + toogleButtons + "'" + toogleUI);
             influxdb_uri = ini.ReadValue("InfluxDB", "uri", influxdb_uri);
             influxdb_local_dir = ini.ReadValue("InfluxDB", "local_dir", influxdb_local_dir);
             Debug.Log("InfluxDB uri: " + influxdb_uri + " local_dir: " + influxdb_local_dir);
