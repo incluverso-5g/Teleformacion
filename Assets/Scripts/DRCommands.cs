@@ -66,6 +66,8 @@ public class DRCommands : MonoBehaviour, ISbspController
     string video_format = "";
     int content_angle = 0;
     string video_status = "-";
+    string VRStatus = "VR";
+    string UI_status = "-";
     double audioVolume = 1.0F;
     string title = "";
     string user_id = "X";
@@ -94,10 +96,17 @@ public class DRCommands : MonoBehaviour, ISbspController
     bool resetSpeed=false;
     bool toogleButtons = false;
     bool toogleUI = false;
+    Vector3 eulerAngles, position;
     //bool ChangeVideo = false;
     bool enableVideo=false;
+    bool armode = false;
+    bool vrmode = true; //The video start with the complete shpere
     bool disableVideo = false;
-
+    //---This variables controls the status of the app elements. By default all the element starts enabled and the Ini file in Start() is responsible of setting true or false regarding the ini file.
+    bool ButtonsStatus = true;
+    bool UIStatus = true;
+    bool VideoStatus = true;
+    bool savePosition = false;
 
     private bool isLoading = false;
 
@@ -162,6 +171,19 @@ public class DRCommands : MonoBehaviour, ISbspController
             enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
             toogleButtons = ini.ReadValue("VideoSphereConfig", "disabledButtons", toogleButtons);
             toogleUI = ini.ReadValue("VideoSphereConfig", "disabledUI", toogleUI);
+            
+            double sphereX = ini.ReadValue("VideoSphereConfig", "sphereX", (double)0.0);
+            double sphereY = ini.ReadValue("VideoSphereConfig", "sphereY", (double)0.0);
+            double sphereZ = ini.ReadValue("VideoSphereConfig", "sphereZ", (double)0.0);
+
+            position = new Vector3(((float)sphereX), (float)sphereY, (float)sphereZ);
+
+            double sphereYaw = ini.ReadValue("VideoSphereConfig", "sphereYaw", (double)0.0);
+            double spherePitch = ini.ReadValue("VideoSphereConfig", "spherePitch", (double)0.0);
+            double sphereRoll = ini.ReadValue("VideoSphereConfig", "sphereRoll", (double)0.0);
+
+            eulerAngles = new Vector3(((float)sphereYaw), (float)spherePitch, (float)sphereRoll);
+
             Debug.Log("Config of sphere is'" + enableVideo + "' device: '" + toogleButtons + "'" + toogleUI);
             influxdb_uri = ini.ReadValue("InfluxDB", "uri", influxdb_uri);
             influxdb_local_dir = ini.ReadValue("InfluxDB", "local_dir", influxdb_local_dir);
@@ -264,13 +286,13 @@ public class DRCommands : MonoBehaviour, ISbspController
             //StartCoroutine(LoadNewContentLocal());
             LoadNewContentImmediate();
         }
-        if(pauseContent)
+        if (pauseContent)
         {
             player.PausePlayer();
             pauseContent = false;
             UpdateVideoStatus("paused", false);
         }
-        if(playContent)
+        if (playContent)
         {
             player.playPlayer();
             playContent = false;
@@ -302,7 +324,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             sphereIcrease = false;
         }
         if (sphereDecrease)
-        {   
+        {
             player.SphereDecrease();
             sphereDecrease = false;
         }
@@ -358,12 +380,14 @@ public class DRCommands : MonoBehaviour, ISbspController
         }
         if (toogleButtons)
         {
+            ButtonsStatus = !ButtonsStatus;
             player.toogleButtons();
             toogleButtons = false;
         }
 
         if (toogleUI)
         {
+            UIStatus = !UIStatus;
             player.toogleUI();
             toogleUI = false;
         }
@@ -374,19 +398,63 @@ public class DRCommands : MonoBehaviour, ISbspController
             ChangeVideo = false;
         }
         */
-        if(enableVideo)
+        if (enableVideo)
         {
             player.setVideoEnable(true);
             enableVideo = false;
             UpdateVideoStatus("playing", false);
         }
-        if(disableVideo)
+        if (disableVideo)
         {
             player.setVideoEnable(false);
             disableVideo = false;
             UpdateVideoStatus("-", false);
         }
+        if (armode)
+        {
+            vrmode = false;
+            armode = false;
+            if (VRStatus == "VR")
+            {
+                VRStatus = "AR";
+                player.ARMode(position, eulerAngles);
+            }
+        }
+        if (vrmode)
+        {
+            vrmode = false;
+            armode = false;
+            if (VRStatus == "AR")
+            {
+                VRStatus = "VR";
+                player.VRMode();
+            }
+        }
+        if (savePosition)
+        {
+            savePosition = false;
+            INIParser ini = new INIParser();
+            try
+            {
+                Debug.Log(String.Format("Reading configuration file: " + ini_file + " On path: " + Application.persistentDataPath));
+                ini.Open(Application.persistentDataPath + "/" + ini_file);
+                ini.WriteValue("VideoSphereConfig", "sphereX", (double) player.transform.position.x);
+                ini.WriteValue("VideoSphereConfig", "sphereY", (double)player.transform.position.y);
+                ini.WriteValue("VideoSphereConfig", "sphereZ", (double)player.transform.position.z);
 
+                ini.WriteValue("VideoSphereConfig", "sphereYaw", (double) player.transform.eulerAngles.x);
+                ini.WriteValue("VideoSphereConfig", "spherePitch", (double) player.transform.eulerAngles.y);
+                ini.WriteValue("VideoSphereConfig", "sphereRoll", (double)player.transform.eulerAngles.z);
+            }        
+        catch (Exception e)
+        {
+            Debug.Log(String.Format("ReadConfigFile exception: " + e.Message));
+        }
+        finally
+        {
+            ini.Close();
+        }
+    }
     }
 
     public void OnDrCommand(SocketIOResponse response)
@@ -455,6 +523,9 @@ public class DRCommands : MonoBehaviour, ISbspController
             if (command.Action.Equals("toogleButtons")) { toogleButtons = true; }
             if (command.Action.Equals("enableVideo")) { enableVideo = true; }
             if (command.Action.Equals("disableVideo")) { disableVideo = true; }
+            if (command.Action.Equals("armode")) { armode = true; }
+            if (command.Action.Equals("vrmode")) { vrmode = true; }
+            if (command.Action.Equals("saveposition")) { savePosition = true; }
 
             if (command.Action.Equals("pause")) {
                 pauseContent = true;
@@ -577,6 +648,9 @@ public class DRCommands : MonoBehaviour, ISbspController
             { "local_mix", 0.0f },
             { "remote_uri", uri },
             { "video_status", video_status },
+            { "ui_status", UIStatus.ToString() }, //Send ("True" o "False").
+            { "buttons_Status", ButtonsStatus.ToString() }, //Send ("True" o "False").
+            { "VRStatus", VRStatus },
             { "cell_info", "N/A" },
             { "connected", connected},
             { "position", player.GetPosition()},

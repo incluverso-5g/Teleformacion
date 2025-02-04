@@ -227,8 +227,21 @@ public class VideoLoader : MonoBehaviour
             }
         
     }
+    public void VRMode()
+    {
+        handmeshui.SetSliderValue(0, 0.0f, false);
+        handmeshui.SetSliderValue(1, 0.0f, false);
+        handmeshui.SetSliderValue(2, 0.0f, false);
+        handmeshui.SetSliderValue(3, 0.0f, false);
+        handmeshui.SetSliderValue(4, 0.0f, false);
+    }
+    public void ARMode(Vector3 position,Vector3 eulerangles)
+    {
+        handmeshui.SetSliderValue(0, 1.0f, false);
+        transform.SetPositionAndRotation(position, Quaternion.Euler(eulerangles));
+    }
 
-            
+
 
     public void plusTenSeconds() 
     {
