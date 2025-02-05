@@ -112,8 +112,7 @@ public class DRCommands : MonoBehaviour, ISbspController
 
     bool isConnected = false; // Flag to track connection status
 
-
-
+    private SynchronizationContext mainThreadContext;
 
     static DRCommands Instance;
 
@@ -166,6 +165,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             ini.Open(Application.persistentDataPath + "/" + ini_file);
             device = ini.ReadValue("SocketIO", "device", device);
             socketio_uri = ini.ReadValue("SocketIO", "uri", socketio_uri);
+            socketio_uri = "http://127.0.0.1:3000";
             socketio_eio = ini.ReadValue("SocketIO", "EIO", socketio_eio);
             Debug.Log("using server uri: '" + socketio_uri+"' device: '" + device + "'");
             enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
@@ -202,6 +202,8 @@ public class DRCommands : MonoBehaviour, ISbspController
 
     private void Awake()
     {
+        mainThreadContext = SynchronizationContext.Current;
+
         if(!this.enabled) {
             Debug.Log("If not enabled from the beginning, this object does not work");
             return;
@@ -235,12 +237,18 @@ public class DRCommands : MonoBehaviour, ISbspController
         client.OnConnected += async (sender, e) =>
         {
             Debug.Log("Connected to server");
-            isConnected = true;
             await Join(device);
-            ReportStatus("client is ready");
+            isConnected = true; // IT WAS BEFORE Join(device) -- I am checking here now!
+            mainThreadContext.Post(_ => ReportStatus("client is ready"), null);
+            //ReportStatus("client is ready");
         };
 
-        client.On("dr_command", OnDrCommand);
+        client.On("dr_command", response =>
+        {
+            mainThreadContext.Post(_ => OnDrCommand(response), null);
+            //OnDrCommand(response);
+        });
+
 
         //Debug.Log("Disabling automatic start from video player!!");
         //player.automaticStart = false;
@@ -383,6 +391,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             ButtonsStatus = !ButtonsStatus;
             player.toogleButtons();
             toogleButtons = false;
+            ReportStatus("Buttons");
         }
 
         if (toogleUI)
@@ -390,6 +399,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             UIStatus = !UIStatus;
             player.toogleUI();
             toogleUI = false;
+            ReportStatus("UI");
         }
         /*
         if (ChangeVideo)
@@ -419,6 +429,7 @@ public class DRCommands : MonoBehaviour, ISbspController
                 VRStatus = "AR";
                 player.ARMode(position, eulerAngles);
             }
+            ReportStatus("AR");
         }
         if (vrmode)
         {
@@ -429,6 +440,7 @@ public class DRCommands : MonoBehaviour, ISbspController
                 VRStatus = "VR";
                 player.VRMode();
             }
+            ReportStatus("VR");
         }
         if (savePosition)
         {
@@ -639,8 +651,11 @@ public class DRCommands : MonoBehaviour, ISbspController
 
     } 
 
-    public async void ReportStatus(string message, bool connected=true)
+
+
+    public void ReportStatus(string message, bool connected=true)
     {
+        Debug.Log($"dr_status (connected={connected}, player={player}) -> {message}");
         var data = new Dictionary<string, object>
         {
             { "group", device },
@@ -648,19 +663,39 @@ public class DRCommands : MonoBehaviour, ISbspController
             { "local_mix", 0.0f },
             { "remote_uri", uri },
             { "video_status", video_status },
-            { "ui_status", UIStatus.ToString() }, //Send ("True" o "False").
-            { "buttons_Status", ButtonsStatus.ToString() }, //Send ("True" o "False").
-            { "VRStatus", VRStatus },
+            { "ui_status", UIStatus }, //Send (True o False).
+            { "buttons_status", ButtonsStatus }, //Send ("True" o "False").
+            { "vr_status", VRStatus },
             { "cell_info", "N/A" },
             { "connected", connected},
             { "position", player.GetPosition()},
             { "message", message }
         };
         Debug.Log(String.Format("dr_status: {0} -- {1} -- {2} -- {3}", device, uri, video_status, message));
-        if(isConnected) // We may miss first OnApplicationPause call on application start -- let's ignore it
-            await client.EmitAsync("dr_status", data); 
+        if (isConnected)
+        {
+           Task.Run(() => SendDrStatus(data));
+        }
         else
+        {
             Debug.LogWarning("Missed dr_status notification to server");
+        }
+    }
+
+    private async Task SendDrStatus(Dictionary<string, object> data)
+    {
+        try
+        {
+            await client.EmitAsync("dr_status", data);
+        }
+        catch (ObjectDisposedException ex)
+        {
+            Debug.LogError($"SocketIO client disposed before sending message: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to send dr_status: {ex.Message}");
+        }
     }
 
     public void UpdateVideoStatus(string status, bool finished)
