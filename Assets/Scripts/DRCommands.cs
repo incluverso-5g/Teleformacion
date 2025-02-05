@@ -165,7 +165,6 @@ public class DRCommands : MonoBehaviour, ISbspController
             ini.Open(Application.persistentDataPath + "/" + ini_file);
             device = ini.ReadValue("SocketIO", "device", device);
             socketio_uri = ini.ReadValue("SocketIO", "uri", socketio_uri);
-            socketio_uri = "http://127.0.0.1:3000";
             socketio_eio = ini.ReadValue("SocketIO", "EIO", socketio_eio);
             Debug.Log("using server uri: '" + socketio_uri+"' device: '" + device + "'");
             enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
