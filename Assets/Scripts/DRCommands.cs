@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using UnityEngine.Video;
 using Unity.VisualScripting;
+using System.IO;
 
 public class DRCommand
 {
@@ -36,6 +37,9 @@ public class DRCommand
 
     [JsonPropertyName("user_id")]
     public string UserId { get; set; } = "";
+
+    [JsonPropertyName("loop")]
+    public string loop { get; set; } = "";
 
     [JsonPropertyName("playlist")]
     public string Playlist { get; set; } = "";
@@ -107,6 +111,7 @@ public class DRCommands : MonoBehaviour, ISbspController
     bool UIStatus = true;
     bool VideoStatus = true;
     bool savePosition = false;
+    bool loop = false;
 
     private bool isLoading = false;
 
@@ -170,16 +175,16 @@ public class DRCommands : MonoBehaviour, ISbspController
             enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
             toogleButtons = ini.ReadValue("VideoSphereConfig", "disabledButtons", toogleButtons);
             toogleUI = ini.ReadValue("VideoSphereConfig", "disabledUI", toogleUI);
-            
-            double sphereX = ini.ReadValue("VideoSphereConfig", "sphereX", (double)0.0);
-            double sphereY = ini.ReadValue("VideoSphereConfig", "sphereY", (double)0.0);
-            double sphereZ = ini.ReadValue("VideoSphereConfig", "sphereZ", (double)0.0);
 
-            position = new Vector3(((float)sphereX), (float)sphereY, (float)sphereZ);
+            double sphereX = ini.ReadValue("VideoSphereConfig", "sphereX", (double)PlayerPrefs.GetFloat("sphereX", 0.0f));
+            double sphereY = ini.ReadValue("VideoSphereConfig", "sphereY", (double)PlayerPrefs.GetFloat("sphereY", 0.0f));
+            double sphereZ = ini.ReadValue("VideoSphereConfig", "sphereZ", (double)PlayerPrefs.GetFloat("sphereZ", 0.0f));
 
-            double sphereYaw = ini.ReadValue("VideoSphereConfig", "sphereYaw", (double)0.0);
-            double spherePitch = ini.ReadValue("VideoSphereConfig", "spherePitch", (double)0.0);
-            double sphereRoll = ini.ReadValue("VideoSphereConfig", "sphereRoll", (double)0.0);
+            position = new Vector3((float)sphereX, (float)sphereY, (float)sphereZ);
+
+            double sphereYaw = ini.ReadValue("VideoSphereConfig", "sphereYaw", (double)PlayerPrefs.GetFloat("sphereYaw", 0.0f));
+            double spherePitch = ini.ReadValue("VideoSphereConfig", "spherePitch", (double)PlayerPrefs.GetFloat("spherePitch", 0.0f));
+            double sphereRoll = ini.ReadValue("VideoSphereConfig", "sphereRoll", (double)PlayerPrefs.GetFloat("sphereRoll", 0.0f));
 
             eulerAngles = new Vector3(((float)sphereYaw), (float)spherePitch, (float)sphereRoll);
 
@@ -444,29 +449,21 @@ public class DRCommands : MonoBehaviour, ISbspController
         if (savePosition)
         {
             savePosition = false;
-            INIParser ini = new INIParser();
-            try
-            {
-                Debug.Log(String.Format("Reading configuration file: " + ini_file + " On path: " + Application.persistentDataPath));
-                ini.Open(Application.persistentDataPath + "/" + ini_file);
-                ini.WriteValue("VideoSphereConfig", "sphereX", (double) player.transform.position.x);
-                ini.WriteValue("VideoSphereConfig", "sphereY", (double)player.transform.position.y);
-                ini.WriteValue("VideoSphereConfig", "sphereZ", (double)player.transform.position.z);
 
-                ini.WriteValue("VideoSphereConfig", "sphereYaw", (double) player.transform.eulerAngles.x);
-                ini.WriteValue("VideoSphereConfig", "spherePitch", (double) player.transform.eulerAngles.y);
-                ini.WriteValue("VideoSphereConfig", "sphereRoll", (double)player.transform.eulerAngles.z);
-            }        
-        catch (Exception e)
-        {
-            Debug.Log(String.Format("ReadConfigFile exception: " + e.Message));
-        }
-        finally
-        {
-            ini.Close();
-        }
+
+            PlayerPrefs.SetFloat("sphereX", player.transform.position.x);
+            PlayerPrefs.SetFloat("sphereY", player.transform.position.y);
+            PlayerPrefs.SetFloat("sphereZ", player.transform.position.z);
+
+            PlayerPrefs.SetFloat("sphereYaw", player.transform.eulerAngles.x);
+            PlayerPrefs.SetFloat("spherePitch", player.transform.eulerAngles.y);
+            PlayerPrefs.SetFloat("sphereRoll", player.transform.eulerAngles.z);
+
+            Debug.Log("Finishing Saving Values");
+            }
+        player.SetLoop(loop);
     }
-    }
+    
 
     public void OnDrCommand(SocketIOResponse response)
     {
@@ -518,8 +515,8 @@ public class DRCommands : MonoBehaviour, ISbspController
             if (command.Action.Equals("-10")) {minusten= true; }
             if (command.Action.Equals("speedup")) {speedUp = true; }
             if (command.Action.Equals("speeddown")) { speedDown= true; }
-            if (command.Action.Equals("SphereIncr")) {sphereIcrease = true; }
-            if (command.Action.Equals("SphereDecr")) {sphereDecrease = true; }
+            if (command.Action.Equals("SphereDecr")) {sphereIcrease = true; } //it is reversed in porpuse
+            if (command.Action.Equals("SphereIncr")) {sphereDecrease = true; }
             if (command.Action.Equals("left")) {left = true; }
             if (command.Action.Equals("right")) { right= true; }
             if (command.Action.Equals("far")) {far = true; }
@@ -536,7 +533,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             if (command.Action.Equals("disableVideo")) { disableVideo = true; }
             if (command.Action.Equals("armode")) { armode = true; }
             if (command.Action.Equals("vrmode")) { vrmode = true; }
-            if (command.Action.Equals("saveposition")) { savePosition = true; }
+            if (command.Action.Equals("savePosition")) { savePosition = true; }
 
             if (command.Action.Equals("pause")) {
                 pauseContent = true;
@@ -556,7 +553,7 @@ public class DRCommands : MonoBehaviour, ISbspController
                 title = command.Name;
                 user_id = command.UserId;
                 playlist = command.Playlist;
-
+                loop= (command.loop=="True");
                 if (command.AudioVolume != "") {
                     audioVolume = Convert.ToInt32(command.AudioVolume) / 100F;
                     if (audioVolume > 1.0F || audioVolume < 0) {

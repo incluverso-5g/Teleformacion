@@ -138,7 +138,10 @@ public class VideoLoader : MonoBehaviour
             videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
         }
     }
-
+    public void SetLoop(bool loop)
+    {
+        videoPlayer.isLooping = loop;
+    }
 
     public void SetRotation(float angle) {
 
@@ -234,11 +237,13 @@ public class VideoLoader : MonoBehaviour
         handmeshui.SetSliderValue(2, 0.0f, false);
         handmeshui.SetSliderValue(3, 0.0f, false);
         handmeshui.SetSliderValue(4, 0.0f, false);
+        transform.localScale = Vector3.one*36;
     }
     public void ARMode(Vector3 position,Vector3 eulerangles)
     {
         handmeshui.SetSliderValue(0, 1.0f, false);
         transform.SetPositionAndRotation(position, Quaternion.Euler(eulerangles));
+        transform.localScale = Vector3.one;
     }
 
 

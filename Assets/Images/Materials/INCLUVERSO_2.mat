@@ -32,8 +32,8 @@ Material:
     - _AspectRatio: 1.484737
     - _Offsetx: 0.05
     - _Offsety: 0.05
-    - _SpherePercentajex: 0
-    - _SpherePercentajey: 0
+    - _SpherePercentajex: 0.7
+    - _SpherePercentajey: 0.65
     - _offsetDistance: 0
     - _offsetx: 0
     - _offsety: 0.065

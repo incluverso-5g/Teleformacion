@@ -133,7 +133,7 @@ public class HandMeshUI : MonoBehaviour
         switch (sliderID)
         {
             case 0:
-                sliderStart = 0.0f;
+                sliderStart = -0.01f;
                 sliderEnd = 1.0f;
                 displayString = "{0, 0:0.00}";
                 break;
