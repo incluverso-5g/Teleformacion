@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.Android;
+using Oculus.Interaction;
 
 public class VideoLoader : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class VideoLoader : MonoBehaviour
     public string videofile;
     public HandMeshUI handmeshui;
     public int statusReportPeriod = 2;
-    public GameObject InteractableObject, HandMeshObject;
+    public GameObject InteractableObjectVR, HandMeshObject, InteractableObjectAR;
     public bool automaticStart = true;
+    private GameObject InteractableObject;
 
     private ISbspController sbspController = null;
 
@@ -35,6 +37,9 @@ public class VideoLoader : MonoBehaviour
         SetMoviesPath();
         Debug.Log(moviesPath);
         videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
+
+        InteractableObject = InteractableObjectVR;
+        InteractableObjectAR.SetActive(false); // The default mode is VR so Buttons in AR are disabled
         if (automaticStart)
             SetupInputPlaybin("video360", videofile);
     }
@@ -195,12 +200,12 @@ public class VideoLoader : MonoBehaviour
 
     public void Right()
     {
-        handmeshui.SetSliderValue(2, (Mathf.Min(handmeshui.GetSliderValue(2) + 0.1f, 1f)), false);
+        handmeshui.SetSliderValue(2, (Mathf.Min(handmeshui.GetSliderValue(2) + 0.1f, 0.5f)), false);
     }
     public void Left()
     {
 
-        handmeshui.SetSliderValue(2, Mathf.Max(handmeshui.GetSliderValue(2) - 0.1f, 0.01f), false);
+        handmeshui.SetSliderValue(2, Mathf.Max(handmeshui.GetSliderValue(2) - 0.1f, -0.5f), false);
     }
     public void Upper()
     {
@@ -228,22 +233,33 @@ public class VideoLoader : MonoBehaviour
             {
             meshRenderer.enabled = !enabled;
             }
-        
+        foreach (var sphereCollider in HandMeshObject.GetComponentsInChildren<SphereCollider>())
+        {
+            sphereCollider.enabled = !enabled;
+        }
+
     }
     public void VRMode()
     {
-        handmeshui.SetSliderValue(0, 0.0f, false);
+        InteractableObject.SetActive(false);
+        
+        handmeshui.SetSliderValue(0, -0.1f, false);
         handmeshui.SetSliderValue(1, 0.0f, false);
         handmeshui.SetSliderValue(2, 0.0f, false);
         handmeshui.SetSliderValue(3, 0.0f, false);
         handmeshui.SetSliderValue(4, 0.0f, false);
         transform.localScale = Vector3.one*36;
+        InteractableObject = InteractableObjectVR;
+
     }
     public void ARMode(Vector3 position,Vector3 eulerangles)
     {
+        InteractableObject.SetActive(false);
+        
         handmeshui.SetSliderValue(0, 1.0f, false);
         transform.SetPositionAndRotation(position, Quaternion.Euler(eulerangles));
-        transform.localScale = Vector3.one;
+        transform.localScale = Vector3.one * 3.6f;
+        InteractableObject = InteractableObjectAR;
     }
 
 
@@ -290,7 +306,6 @@ public class VideoLoader : MonoBehaviour
         }
         yield return null;
     }
-
     void OnEndReached(VideoPlayer vp)
     {
         if(sbspController != null)

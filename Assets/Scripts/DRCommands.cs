@@ -212,8 +212,9 @@ public class DRCommands : MonoBehaviour, ISbspController
             Debug.Log("If not enabled from the beginning, this object does not work");
             return;
         }
+        
         // Make object singleton
-        if(Instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
@@ -291,7 +292,29 @@ public class DRCommands : MonoBehaviour, ISbspController
 
     // Update is called once per frame
     void Update()
-    {
+    { //There are a lot of things relies on the AR/VR mode, so it is preferable to have it at the beggining.
+        if (armode)
+        {
+            vrmode = false;
+            armode = false;
+            if (VRStatus == "VR")
+            {
+                VRStatus = "AR";
+                player.ARMode(position, eulerAngles);
+            }
+            ReportStatus("AR");
+        }
+        if (vrmode)
+        {
+            vrmode = false;
+            armode = false;
+            if (VRStatus == "AR")
+            {
+                VRStatus = "VR";
+                player.VRMode();
+            }
+            ReportStatus("VR");
+        }
         if (loadNewContent && !isLoading)
         {
             loadNewContent = false;
@@ -424,28 +447,6 @@ public class DRCommands : MonoBehaviour, ISbspController
             disableVideo = false;
             UpdateVideoStatus("-", false);
         }
-        if (armode)
-        {
-            vrmode = false;
-            armode = false;
-            if (VRStatus == "VR")
-            {
-                VRStatus = "AR";
-                player.ARMode(position, eulerAngles);
-            }
-            ReportStatus("AR");
-        }
-        if (vrmode)
-        {
-            vrmode = false;
-            armode = false;
-            if (VRStatus == "AR")
-            {
-                VRStatus = "VR";
-                player.VRMode();
-            }
-            ReportStatus("VR");
-        }
         if (savePosition)
         {
             savePosition = false;
@@ -458,7 +459,8 @@ public class DRCommands : MonoBehaviour, ISbspController
             PlayerPrefs.SetFloat("sphereYaw", player.transform.eulerAngles.x);
             PlayerPrefs.SetFloat("spherePitch", player.transform.eulerAngles.y);
             PlayerPrefs.SetFloat("sphereRoll", player.transform.eulerAngles.z);
-
+            position = player.transform.position;
+            eulerAngles = player.transform.eulerAngles;
             Debug.Log("Finishing Saving Values");
             }
         player.SetLoop(loop);

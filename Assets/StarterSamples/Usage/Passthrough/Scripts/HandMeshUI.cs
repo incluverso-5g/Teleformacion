@@ -56,7 +56,7 @@ public class HandMeshUI : MonoBehaviour
 
     void Update()
     {
-        if (rightHand.IsDataValid)
+        if (rightHand.IsDataValid && (rightHand.IsDataHighConfidence))
         {
             Vector3 RfingerPos = rightHand.Bones[20].Transform.position;
             if (rightHeldKnob >= 0)
@@ -143,8 +143,8 @@ public class HandMeshUI : MonoBehaviour
                 displayString = "{0, 0:0.00}";
                 break;
             case 2:
-                sliderStart = 0.0f;
-                sliderEnd = 1.0f;
+                sliderStart = -0.5f;
+                sliderEnd = 0.5f;
                 displayString = "{0, 0:0.00}";
                 break;
             case 3:
