@@ -250,6 +250,7 @@ public class VideoLoader : MonoBehaviour
         handmeshui.SetSliderValue(4, 0.0f, false);
         transform.localScale = Vector3.one*36;
         InteractableObject = InteractableObjectVR;
+        GameObject.Find("WaitingText").SetActive(false);
 
     }
     public void ARMode(Vector3 position,Vector3 eulerangles)

@@ -175,7 +175,7 @@ public class DRCommands : MonoBehaviour, ISbspController
             enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
             toogleButtons = ini.ReadValue("VideoSphereConfig", "disabledButtons", toogleButtons);
             toogleUI = ini.ReadValue("VideoSphereConfig", "disabledUI", toogleUI);
-
+            vrmode = true;
             double sphereX = ini.ReadValue("VideoSphereConfig", "sphereX", (double)PlayerPrefs.GetFloat("sphereX", 0.0f));
             double sphereY = ini.ReadValue("VideoSphereConfig", "sphereY", (double)PlayerPrefs.GetFloat("sphereY", 0.0f));
             double sphereZ = ini.ReadValue("VideoSphereConfig", "sphereZ", (double)PlayerPrefs.GetFloat("sphereZ", 0.0f));
