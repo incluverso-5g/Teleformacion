@@ -28,7 +28,7 @@ public class HandMeshUI : MonoBehaviour
     public TextMesh[] readouts;
     public float[] valuesReadouts;
     public Transform SphereTransform;
-
+    Vector3 OriginalSphereEulerAngles;
     int rightHeldKnob = -1;
     int leftHeldKnob = -1;
 
@@ -41,6 +41,7 @@ public class HandMeshUI : MonoBehaviour
 
     void Start()
     {
+        OriginalSphereEulerAngles = SphereTransform.transform.eulerAngles;
         valuesReadouts = new float[5];
         //SetSliderValue(0, rightMask.radialDivisions, false);
         SetSliderValue(0, 0.0f, false);
@@ -50,7 +51,7 @@ public class HandMeshUI : MonoBehaviour
         //SetSliderValue(1, rightMask.borderSize, false);
         //SetSliderValue(2, rightMask.fingerTaper, false);
         //SetSliderValue(3, rightMask.fingerTipLength, false);
-        SetSliderValue(4, 0.0f, false);
+        SetSliderValue(4, 0.1f, false);
         
     }
 
@@ -190,7 +191,7 @@ public class HandMeshUI : MonoBehaviour
             case 4:
                 if (absoluteValue > 0.9f)
                 {
-                    SphereTransform.SetPositionAndRotation(Camera.main.transform.position, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+                    SphereTransform.SetPositionAndRotation(Camera.main.transform.position, Quaternion.Euler(OriginalSphereEulerAngles));
                     knobs[1].transform.localPosition = Vector3.right * 0 * sliderScale;
                     knobs[3].transform.localPosition = Vector3.right * 0 * sliderScale;
                     knobs[4].transform.localPosition = Vector3.right * 0 * sliderScale;
