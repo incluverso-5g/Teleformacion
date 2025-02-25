@@ -247,6 +247,17 @@ public class DRCommands : MonoBehaviour, ISbspController
             mainThreadContext.Post(_ => ReportStatus("client is ready"), null);
             //ReportStatus("client is ready");
         };
+        client.OnDisconnected += (sender, e) =>
+        {
+            Debug.Log("Disconnected from server!!");
+            isConnected = false;
+        };
+        client.OnError += (sender, e) =>
+        {
+            Debug.Log($"Error received from server!! - {e}");
+            //isConnected = false; // Not sure if this is too much assuming
+        };
+
 
         client.On("dr_command", response =>
         {
@@ -264,11 +275,8 @@ public class DRCommands : MonoBehaviour, ISbspController
     {
         Debug.Log(String.Format("Starting VR Player"));
 
-        // Connect to the server
-        //client.ConnectAsync().GetAwaiter().GetResult(); // FIXME -- this should be handled separately, as it may take LONG""
-        //Task.Run(() => client.ConnectAsync().GetAwaiter().GetResult());
+        Debug.Log("Launching connect from Start");
         Task.Run(Connect);
-        //player.gameObject.SetActive(false);
         
     }
 
@@ -731,6 +739,8 @@ public class DRCommands : MonoBehaviour, ISbspController
         }
         else {
             Debug.Log("App resume");
+            Debug.Log("Launching connect from OnApplicationPause");
+            Task.Run(Connect); // Try anyway! It should be harmless if application is already connected
             ReportStatus("App resume");
         }
     }
