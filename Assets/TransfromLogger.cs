@@ -23,15 +23,15 @@ public class TransformLogger : MonoBehaviour
         {
             while (true)
             {
-                string Time = new System.DateTimeOffset(System.DateTime.UtcNow).ToUnixTimeSeconds().ToString();
+                string Time = new System.DateTimeOffset(System.DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
                 foreach (Transform t in RightHand.Joints)
                 {
-                    writer.WriteLine(Time + ", RightHand," + t.name + ", " + t.position);
+                    writer.WriteLine(Time + ", RightHand," + t.name + ", " + t.position + "," + t.rotation);
                 }
                 writer.Flush(); // Ensure data is written to the file
                 foreach (Transform t in LeftHand.Joints)
                 {
-                    writer.WriteLine(Time + ", LeftHand," + t.name + ", " + t.position);
+                    writer.WriteLine(Time + ", LeftHand," + t.name + ", " + t.position + "," + t.rotation);
                 }
                 writer.Flush(); // Ensure data is written to the file
                 yield return new WaitForSeconds(0.5f);
