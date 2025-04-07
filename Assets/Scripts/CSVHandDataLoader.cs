@@ -6,19 +6,28 @@ using UnityEngine;
 public class CSVHandDataLoader : MonoBehaviour
 {
     public string filePath = "hand_data.csv";
-    private Dictionary<string, GameObject> handObjects = new Dictionary<string, GameObject>();
-
+    public Transform RightHand,LeftHand;
+    private Dictionary<string, GameObject> RightHandObjects = new Dictionary<string, GameObject>();
+    private Dictionary<string, GameObject> LeftHandObjects = new Dictionary<string, GameObject>();
     void Start()
     {
         LoadHandObjects();
         StartCoroutine(LoadCSVAndApplyTransforms());
     }
 
-    void LoadHandObjects()
+    void LoadHandObjects() //Esto hay que modificarlo para que lea LeftHand o RightHand
     {
-        foreach (Transform child in transform)
+        if (RightHand != null) { 
+        foreach (Transform child in RightHand)
         {
-            handObjects[child.name] = child.gameObject;
+            RightHandObjects[child.name] = child.gameObject;
+            }
+        }
+        if (LeftHand != null) {
+            foreach (Transform child in LeftHand)
+            {
+                LeftHandObjects[child.name] = child.gameObject;
+            }
         }
     }
 
