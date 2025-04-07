@@ -7,7 +7,7 @@ public class CSVHandDataLoader : MonoBehaviour
 {
     public string filePath = "hand_data.csv";
     private Dictionary<string, GameObject> handObjects = new Dictionary<string, GameObject>();
-
+    
     void Start()
     {
         LoadHandObjects();

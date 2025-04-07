@@ -2038,7 +2038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79611bffcd925348945107edc43198c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: hand_data.csv
+  filePath: handsimulation.txt
 --- !u!4 &909319096
 Transform:
   m_ObjectHideFlags: 0
