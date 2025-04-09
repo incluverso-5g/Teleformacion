@@ -1709,6 +1709,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffe41fe81087fa41a2062cc69b99615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &530659296 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2143258138932893621, guid: e7fbb376593cff24f9db4ecf8d465aaf, type: 3}
+  m_PrefabInstance: {fileID: 1913207994}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &609881281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,7 +2030,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &909319095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2039,6 +2044,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   filePath: handsimulation.txt
+  RightHand: {fileID: 1666994452}
+  LeftHand: {fileID: 530659296}
 --- !u!4 &909319096
 Transform:
   m_ObjectHideFlags: 0
@@ -2867,6 +2874,11 @@ MonoBehaviour:
   _handJointId: 15
   _localPositionOffset: {x: 0, y: 0, z: 0}
   _rotationOffset: {x: 0, y: 0, z: 0, w: 1}
+--- !u!4 &1666994452 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8662184560145590689, guid: 94313e563929cb3499e3989be338a213, type: 3}
+  m_PrefabInstance: {fileID: 151065026}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1830271188
 GameObject:
   m_ObjectHideFlags: 0
