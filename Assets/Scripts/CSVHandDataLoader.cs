@@ -8,6 +8,7 @@ public class CSVHandDataLoader : MonoBehaviour
 {
     public string filePath = "hand_data.csv";
     public Transform RightHand,LeftHand;
+    public float fixedTimeUpdates = 0.2f;
     private Dictionary<string, GameObject> RightHandObjects = new Dictionary<string, GameObject>();
     private Dictionary<string, GameObject> LeftHandObjects = new Dictionary<string, GameObject>();
     void Start()
@@ -61,7 +62,7 @@ public class CSVHandDataLoader : MonoBehaviour
             {
                 float endTime = Time.realtimeSinceStartup;
                 float elapsedTime = endTime - startTime;
-                float remainingTime = 0.5f - elapsedTime;
+                float remainingTime = fixedTimeUpdates - elapsedTime;
 
                 Debug.Log("Finalized one iteration" + remainingTime);
 

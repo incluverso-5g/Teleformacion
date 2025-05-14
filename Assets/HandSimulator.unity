@@ -388,9 +388,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79611bffcd925348945107edc43198c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: TransformLog_1744107148.txt
+  filePath: TransformLog_1744195459.txt
   RightHand: {fileID: 686674675}
   LeftHand: {fileID: 744842892}
+  fixedTimeUpdates: 0.2
 --- !u!1001 &1487342237
 PrefabInstance:
   m_ObjectHideFlags: 0
