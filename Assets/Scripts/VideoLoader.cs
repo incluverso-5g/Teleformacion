@@ -24,6 +24,10 @@ public class VideoLoader : MonoBehaviour
 
     protected bool started = false;
     protected bool enabled  = true;
+    private void Awake()
+    {
+        SetMoviesPath();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +38,7 @@ public class VideoLoader : MonoBehaviour
         videoPlayer = GetComponent<VideoPlayer>();
         videoPlayer.loopPointReached += OnEndReached;
         videoPlayer.errorReceived += OnError;
-        SetMoviesPath();
+        //videofile = GetComponent<DRCommands>().Playlist[0];
         Debug.Log(moviesPath);
         videoPlayer.transform.GetComponent<MeshRenderer>().enabled = false;
 
@@ -91,6 +95,7 @@ public class VideoLoader : MonoBehaviour
             uri = System.IO.Path.Combine(moviesPath, uri);
         }
         Debug.Log($"Playing uri: {uri}");
+        GetComponent<DRCommands>().Logsaver.SetLogState(uri);
         videoPlayer.url = uri;
         videoPlayer.Prepare();
         videoPlayer.Play();
@@ -224,6 +229,9 @@ public class VideoLoader : MonoBehaviour
     public void toogleButtons()
     {
         InteractableObject.SetActive(!InteractableObject.activeSelf);
+        InteractableObject.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 0.5f;
+        InteractableObject.transform.rotation = Camera.main.transform.rotation;
+
     }
     public void toogleUI()
     {
@@ -309,8 +317,22 @@ public class VideoLoader : MonoBehaviour
     }
     void OnEndReached(VideoPlayer vp)
     {
-        if(sbspController != null)
-            sbspController.UpdateStreamStatus("finished", true);
+        if (sbspController != null)
+            
+            if (GetComponent<DRCommands>().Playlist.Count > 0) {
+                Debug.Log("Trying to change the video" + GetComponent<DRCommands>().Playlist[0]);
+                //SetupInputPlaybin("video360", GetComponent<DRCommands>().Playlist[0], this.sbspController);
+                videoPlayer.Stop();
+                videoPlayer.url = System.IO.Path.Combine(moviesPath,GetComponent<DRCommands>().Playlist[0]);
+                videoPlayer.Prepare();
+                videoPlayer.Play();
+                GetComponent<DRCommands>().Playlist.RemoveAt(0);
+            }
+            else
+            {
+                sbspController.UpdateStreamStatus("finished", true);
+                Application.Quit();
+            }
     }
 
     void OnError(VideoPlayer vp, string message)

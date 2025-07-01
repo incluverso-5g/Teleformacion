@@ -2030,7 +2030,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &909319095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2046,6 +2046,7 @@ MonoBehaviour:
   filePath: handsimulation.txt
   RightHand: {fileID: 1666994452}
   LeftHand: {fileID: 530659296}
+  fixedTimeUpdates: 0.2
 --- !u!4 &909319096
 Transform:
   m_ObjectHideFlags: 0

@@ -56,7 +56,8 @@ public class DRCommands : MonoBehaviour, ISbspController
     public VideoLoader player;
     public VideoPlayer playerPlayer;
     //public GameObject screen;
-    
+    public List<string> Playlist;
+    public LogSaver Logsaver;
     // They will load from config file, so they are private now
     string device = "PABLO";
     string socketio_uri = "http://192.168.137.1:3000"; //"ws://127.0.0.1:3000/socket.io/?EIO=4&transport=websocket";
@@ -112,6 +113,7 @@ public class DRCommands : MonoBehaviour, ISbspController
     bool VideoStatus = true;
     bool savePosition = false;
     bool loop = false;
+    float DCSQ_Period, DCSQ_Timeout;
 
     private bool isLoading = false;
 
@@ -171,6 +173,10 @@ public class DRCommands : MonoBehaviour, ISbspController
             device = ini.ReadValue("SocketIO", "device", device);
             socketio_uri = ini.ReadValue("SocketIO", "uri", socketio_uri);
             socketio_eio = ini.ReadValue("SocketIO", "EIO", socketio_eio);
+            DCSQ_Period = ini.ReadValue("DCSQ", "Period", 20);
+            DCSQ_Timeout = ini.ReadValue("DCSQ", "Timeout", 5);
+            Logsaver.UserId = ini.ReadValue("DCSQ", "UserID", "-1");
+            Playlist = new List<string>(ini.ReadValue("DCSQ", "Playlist", "none none").Split(" "));
             Debug.Log("using server uri: '" + socketio_uri+"' device: '" + device + "'");
             enableVideo = ini.ReadValue("VideoSphereConfig", "enabledVideo", enableVideo);
             toogleButtons = ini.ReadValue("VideoSphereConfig", "disabledButtons", toogleButtons);
@@ -274,8 +280,14 @@ public class DRCommands : MonoBehaviour, ISbspController
     void Start()
     {
         Debug.Log(String.Format("Starting VR Player"));
-
         Debug.Log("Launching connect from Start");
+        if(Playlist.Count > 0)
+        {
+            player.SetupInputPlaybin(video_format, Playlist[0], this);
+            Playlist.RemoveAt(0);
+            StartCoroutine(VoteDCSQ());
+        }
+            
         Task.Run(Connect);
         
     }
@@ -285,7 +297,23 @@ public class DRCommands : MonoBehaviour, ISbspController
         Debug.Log($"Client connected to {socketio_uri}");
     }
 
-    
+    private IEnumerator VoteDCSQ()
+    {
+        while (true)
+        {
+            // Wait 20 seconds before enabling
+            yield return new WaitForSeconds(DCSQ_Period);
+
+            // Enable the GameObject
+            player.toogleButtons();
+
+            // Keep it enabled for 5 seconds
+            yield return new WaitForSeconds(DCSQ_Timeout);
+
+            // Disable the GameObject
+            //player.toogleButtons();
+        }
+    }
 
     public async Task Join(string device)
     {
